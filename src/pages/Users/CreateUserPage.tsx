@@ -16,7 +16,7 @@ import { useNavigate } from "react-router";
 import { PATH } from "@/routes/path";
 import PageHeader from "@/components/common/PageHeader";
 
-const CreateUser = () => {
+const CreateUserPage = () => {
   const [roles, setRoles] = useState<Role[]>([]);
   const navigate = useNavigate();
 
@@ -96,4 +96,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default CreateUserPage;

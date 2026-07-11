@@ -1,6 +1,8 @@
 import { getUser } from "@/services/authApi";
 import type { UserAuth } from "@/types/auth";
-import { createContext, useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { createContext, useContext, useEffect, useState } from "react";
+import { logout as logoutApi } from "@/services/authApi";
 
 type AuthContextType = {
   token: string | null;
@@ -8,11 +10,21 @@ type AuthContextType = {
   user: UserAuth | null;
   setUser: React.Dispatch<React.SetStateAction<UserAuth | null>>;
   authLoading: boolean;
+  hasPermission: (permission: string) => boolean;
+  logout: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(
@@ -20,6 +32,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
   const [user, setUser] = useState<UserAuth | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -48,9 +61,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     fetchUser();
   }, [token]);
 
+  const hasPermission = (permission: string): boolean => {
+    return user?.permissions?.some((p) => p.slug === permission) ?? false;
+  };
+
+  const logout = async () => {
+    setAuthLoading(true);
+    try {
+      await logoutApi();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      localStorage.removeItem("token");
+
+      setToken(null);
+
+      setUser(null);
+
+      queryClient.clear();
+
+      setAuthLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ token, setToken, user, setUser, authLoading }}
+      value={{
+        token,
+        setToken,
+        user,
+        setUser,
+        authLoading,
+        hasPermission,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

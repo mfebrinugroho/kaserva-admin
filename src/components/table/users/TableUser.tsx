@@ -15,6 +15,7 @@ import PerPage from "@/components/ui/table/PerPage";
 import Pagination from "@/components/ui/table/Pagination";
 import { Link } from "react-router";
 import { PATH } from "@/routes/path";
+import RoleBadge from "@/components/ui/badge/RoleBadge";
 
 type Props = {
   users: User[];
@@ -206,7 +207,10 @@ const TableUser = ({
                     </TableCell>
                     <TableCell className="col-span-2 flex items-center border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
-                        {user.role.name}
+                        {/* {user.role.name} */}
+                        <RoleBadge role={user.role.slug}>
+                          {user.role.name}
+                        </RoleBadge>
                       </p>
                     </TableCell>
                     <TableCell className="col-span-1 flex items-center border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">

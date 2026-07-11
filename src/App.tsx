@@ -3,7 +3,7 @@ import { ScrollToTop } from "@/components/common/ScrollToTop";
 import AppLayout from "@/layouts/AppLayout";
 import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import LoadingScreen from "@/components/ui/loading/LoadingScreen";
 import GuestRoute from "@/routes/GuestRoute";
 import ProtectedRoute from "@/routes/ProtectedRoute";
@@ -11,11 +11,14 @@ import Menu from "@/pages/Menu";
 import RoleRoute from "@/routes/RoleRoute";
 import Forbidden from "@/pages/ErrorPage/Forbidden";
 import NotFound from "@/pages/ErrorPage/NotFound";
-import User from "@/pages/Users/User";
-import CreateUser from "@/pages/Users/CreateUser";
+import UserPage from "@/pages/Users/UserPage";
+import CreateUserPage from "@/pages/Users/CreateUserPage";
 import { PATH } from "@/routes/path";
 import { Toaster } from "sonner";
-import EditUser from "@/pages/Users/EditUser";
+import EditUserPage from "@/pages/Users/EditUserPage";
+import StorePage from "@/pages/Stores/StorePage";
+import CreateStorePage from "./pages/Stores/CreateStorePage";
+import EditStorePage from "./pages/Stores/EditStorePage";
 
 function App() {
   const { user, authLoading } = useAuth();
@@ -40,9 +43,26 @@ function App() {
 
               {/* Super Admin */}
               <Route element={<RoleRoute roles={["super-admin"]} />}>
-                <Route path={PATH.USERS} element={<User />} />
-                <Route path={PATH.USERS_CREATE} element={<CreateUser />} />
-                <Route path={PATH.USERS_EDIT_PATTERN} element={<EditUser />} />
+                <Route path={PATH.USERS} element={<UserPage />} />
+                <Route path={PATH.USERS_CREATE} element={<CreateUserPage />} />
+                <Route
+                  path={PATH.USERS_EDIT_PATTERN}
+                  element={<EditUserPage />}
+                />
+
+                <Route
+                  path={PATH.STORES_CREATE}
+                  element={<CreateStorePage />}
+                />
+              </Route>
+
+              {/* Super Admin & Owner */}
+              <Route element={<RoleRoute roles={["super-admin", "owner"]} />}>
+                <Route path={PATH.STORES} element={<StorePage />} />
+                <Route
+                  path={PATH.STORES_EDIT_PATTERN}
+                  element={<EditStorePage />}
+                />
               </Route>
 
               {/* Admin */}

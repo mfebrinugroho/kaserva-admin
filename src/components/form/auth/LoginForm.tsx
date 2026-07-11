@@ -5,7 +5,7 @@ import Input from "@/components/ui/input/InputField";
 import Checkbox from "@/components/ui/input/Checkbox";
 import Button from "@/components/ui/button/Button";
 import { ChevronLeft, Eye, EyeOff } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import { login } from "@/services/authApi";
 import axios from "axios";
 

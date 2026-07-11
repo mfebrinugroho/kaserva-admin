@@ -2,29 +2,18 @@ import { useState } from "react";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { useNavigate } from "react-router";
-import { logout } from "@/services/authApi";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import { PATH } from "@/routes/path";
+import LoadingScreen from "@/components/ui/loading/LoadingScreen";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, authLoading, setToken, setUser } = useAuth();
+  const { user, logout, authLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      localStorage.removeItem("token");
-
-      setToken(null);
-
-      setUser(null);
-
-      navigate(PATH.LOGIN);
-    }
+    await logout();
+    navigate(PATH.LOGIN);
   };
 
   const toggleDropdown = () => {
@@ -34,6 +23,11 @@ export default function UserDropdown() {
   const closeDropdown = () => {
     setIsOpen(false);
   };
+
+  if (authLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className="relative">
       <button

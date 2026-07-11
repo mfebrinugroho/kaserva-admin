@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
-const EditUser = () => {
+const EditUserPage = () => {
   const { id } = useParams();
   // const [user, setUser] = useState<User>();
   const [roles, setRoles] = useState<Role[]>([]);
@@ -136,4 +136,4 @@ const EditUser = () => {
   );
 };
 
-export default EditUser;
+export default EditUserPage;

@@ -1,10 +1,5 @@
-export interface Role {
+export interface Permission {
   id: number;
-  slug: string;
-  name: string;
-}
-
-export interface AuthPermission {
   slug: string;
   name: string;
 }

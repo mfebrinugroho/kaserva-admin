@@ -19,7 +19,7 @@ export interface PaginationLinks {
 export interface ApiPaginatedResponse<T> {
   success: boolean;
   message: string;
-  data: T;
+  data: T[];
   meta: PaginationMeta;
   links: PaginationLinks;
 }

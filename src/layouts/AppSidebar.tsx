@@ -6,8 +6,10 @@ import {
   Ellipsis,
   LayoutDashboard,
   SquareMenu,
+  Store,
   Users,
 } from "lucide-react";
+import { PATH } from "@/routes/path";
 
 type NavItem = {
   name: string;
@@ -20,7 +22,7 @@ const navItems: NavItem[] = [
   {
     icon: <LayoutDashboard />,
     name: "Dashboard",
-    path: "/",
+    path: PATH.DASHBOARD,
   },
 ];
 
@@ -36,12 +38,17 @@ const othersItems: NavItem[] = [
   {
     icon: <Users />,
     name: "User",
-    path: "/users",
+    path: PATH.USERS,
+  },
+  {
+    icon: <Store />,
+    name: "Resto/Toko",
+    path: PATH.STORES,
   },
   {
     icon: <SquareMenu />,
     name: "Menu",
-    path: "/menu",
+    path: PATH.MENU,
   },
 ];
 

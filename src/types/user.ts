@@ -17,3 +17,9 @@ export interface UserForm {
   password_confirmation: string;
   role_id: number;
 }
+
+export interface Owner {
+  id: number;
+  name: string;
+  email: string;
+}

@@ -3,13 +3,14 @@ import PageHeader from "@/components/common/PageHeader";
 import TableUser from "@/components/table/users/TableUser";
 import ModalDelete from "@/components/ui/modal/ModalDelete";
 import { useDebounce } from "@/hooks/useDebounce";
+import { PATH } from "@/routes/path";
 import { userService } from "@/services/user.service";
 import type { PaginationMeta } from "@/types/api";
 import type { User } from "@/types/user";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const User = () => {
+const UserPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [loading, setLoading] = useState(false);
@@ -17,11 +18,11 @@ const User = () => {
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
 
+  const debouncedSearch = useDebounce(search, 300);
+
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const debouncedSearch = useDebounce(search, 300);
 
   const fetchUsers = useCallback(async () => {
     const res = await userService.list(page, limit, debouncedSearch);
@@ -84,7 +85,7 @@ const User = () => {
           title="Kelola Data User"
           desc="Kelola dan pantau data user"
           addTitle="Tambah User"
-          addUrl="/users/create"
+          addUrl={PATH.USERS_CREATE}
           addButton
         >
           <TableUser
@@ -116,4 +117,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default UserPage;
