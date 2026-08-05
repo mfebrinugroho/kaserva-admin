@@ -1,19 +1,19 @@
-import axios from "@/libs/axios";
+// import axios from "@/libs/axios";
 import api from "@/libs/axios";
 import type { ApiResponse } from "@/types/api";
 
 import type { Login, Register, AuthResponse, UserAuth } from "@/types/auth";
 
 // GET CSRF COOKIE
-export const csrf = async () => {
-  await axios.get(`${import.meta.env.VITE_API_URL}/sanctum/csrf-cookie`);
-};
+// export const csrf = async () => {
+//   await axios.get(`${import.meta.env.VITE_API_URL}/sanctum/csrf-cookie`);
+// };
 
 // REGISTER
 export const register = async (
   payload: Register,
 ): Promise<ApiResponse<AuthResponse>> => {
-  await csrf();
+  // await csrf();
 
   const response = await api.post("/register", payload);
 
@@ -24,7 +24,7 @@ export const register = async (
 export const login = async (
   payload: Login,
 ): Promise<ApiResponse<AuthResponse>> => {
-  await csrf();
+  // await csrf();
 
   const response = await api.post("/login", payload);
 
