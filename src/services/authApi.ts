@@ -6,7 +6,7 @@ import type { Login, Register, AuthResponse, UserAuth } from "@/types/auth";
 
 // GET CSRF COOKIE
 export const csrf = async () => {
-  await axios.get("http://127.0.0.1:8000/sanctum/csrf-cookie");
+  await axios.get(`${import.meta.env.VITE_API_URL}/sanctum/csrf-cookie`);
 };
 
 // REGISTER
