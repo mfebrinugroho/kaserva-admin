@@ -24,4 +24,5 @@ export interface StoreAuth {
   id: number;
   slug: string;
   name: string;
+  image_url: string;
 }

@@ -1,6 +1,5 @@
 import PageMeta from "@/components/common/PageMeta";
 import DashboardCard from "@/components/dashboard/DashboardCard";
-import DashNew from "@/components/dashboard/DashNew";
 import OperationalStatus from "@/components/dashboard/OperationalStatus";
 import RecentOrders from "@/components/dashboard/RecentOrders";
 import StatsGrid from "@/components/dashboard/StatsGrid";
@@ -19,9 +18,9 @@ export default function Home() {
 
       <DashboardCard user={user} />
 
-      <div className="mt-8">
+      {/* <div className="mt-8">
         <DashNew />
-      </div>
+      </div> */}
 
       <div className="mt-8">
         <OperationalStatus />

@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 export const createStoreSchema = z.object({
-  name: z.string().max(100, "Nama toko maksimal 100 karakter").optional(),
+  name: z
+    .string()
+    .min(1, "Nama harus diisi!")
+    .max(100, "Nama toko maksimal 100 karakter"),
 
   description: z.string().max(255, "Deskripsi terlalu panjang").optional(),
 

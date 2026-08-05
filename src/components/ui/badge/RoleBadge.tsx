@@ -5,7 +5,7 @@ const RoleBadge = ({
   children,
   className,
 }: {
-  role: string;
+  role?: string;
   children: React.ReactNode;
   className?: string;
 }) => {

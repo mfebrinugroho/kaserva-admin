@@ -5,21 +5,21 @@ interface DropdownItemProps {
   tag?: "a" | "button";
   to?: string;
   onClick?: () => void;
-  onItemClick?: () => void;
+  // onItemClick?: () => void;
   baseClassName?: string;
   className?: string;
   children: React.ReactNode;
 }
 
-export const DropdownItem: React.FC<DropdownItemProps> = ({
+export const DropdownItem = ({
   tag = "button",
   to,
   onClick,
-  onItemClick,
+  // onItemClick,
   baseClassName = "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900",
   className = "",
   children,
-}) => {
+}: DropdownItemProps) => {
   const combinedClasses = `${baseClassName} ${className}`.trim();
 
   const handleClick = (event: React.MouseEvent) => {
@@ -27,7 +27,7 @@ export const DropdownItem: React.FC<DropdownItemProps> = ({
       event.preventDefault();
     }
     if (onClick) onClick();
-    if (onItemClick) onItemClick();
+    // if (onItemClick) onItemClick();
   };
 
   if (tag === "a" && to) {

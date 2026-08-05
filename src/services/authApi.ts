@@ -1,13 +1,8 @@
 import axios from "@/libs/axios";
 import api from "@/libs/axios";
+import type { ApiResponse } from "@/types/api";
 
-import type {
-  Login,
-  Register,
-  AuthResponse,
-  User,
-  UserAuth,
-} from "@/types/auth";
+import type { Login, Register, AuthResponse, UserAuth } from "@/types/auth";
 
 // GET CSRF COOKIE
 export const csrf = async () => {
@@ -17,7 +12,7 @@ export const csrf = async () => {
 // REGISTER
 export const register = async (
   payload: Register,
-): Promise<AuthResponse<User>> => {
+): Promise<ApiResponse<AuthResponse>> => {
   await csrf();
 
   const response = await api.post("/register", payload);
@@ -26,12 +21,14 @@ export const register = async (
 };
 
 // LOGIN
-export const login = async (payload: Login): Promise<AuthResponse<User>> => {
+export const login = async (
+  payload: Login,
+): Promise<ApiResponse<AuthResponse>> => {
   await csrf();
 
   const response = await api.post("/login", payload);
 
-  return response.data;
+  return response.data.data;
 };
 
 // GET AUTH USER

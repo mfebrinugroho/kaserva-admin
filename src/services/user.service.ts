@@ -2,6 +2,7 @@ import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
 import api from "../libs/axios";
 import type { User, UserForm } from "@/types/user";
 import type { EditUserFormData } from "@/schemas/editUser.schema";
+import type { UserAuth } from "@/types/auth";
 
 export const userService = {
   // Ambil semua data user dengan pagination
@@ -44,6 +45,17 @@ export const userService = {
   // Api untuk menghapus data user
   delete: async (id: number) => {
     const response = await api.delete(`/users/${id}`);
+
+    return response.data;
+  },
+
+  updateActiveStore: async (id: number): Promise<ApiResponse<UserAuth>> => {
+    const response = await api.post<ApiResponse<UserAuth>>(
+      `/user/active-store`,
+      {
+        store_id: id,
+      },
+    );
 
     return response.data;
   },

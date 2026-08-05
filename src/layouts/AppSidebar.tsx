@@ -48,7 +48,7 @@ const othersItems: NavItem[] = [
   {
     icon: <SquareMenu />,
     name: "Menu",
-    path: PATH.MENU,
+    path: PATH.MENUS,
   },
 ];
 

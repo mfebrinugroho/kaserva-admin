@@ -1,7 +1,7 @@
 import type { UserAuth } from "@/types/auth";
 import RoleBadge from "../ui/badge/RoleBadge";
 
-const DashboardCard = ({ user }: { user: UserAuth }) => {
+const DashboardCard = ({ user }: { user: UserAuth | null }) => {
   return (
     <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-linear-to-br from-emerald-500 via-emerald-600 to-teal-600 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950 p-8 shadow-2xl">
       {/* Background Glow */}
@@ -19,7 +19,7 @@ const DashboardCard = ({ user }: { user: UserAuth }) => {
           </span>
 
           <h1 className="mt-5 text-4xl font-bold text-white">
-            Halo, {user.name} 👋
+            Halo, {user?.name} 👋
           </h1>
 
           <p className="mt-3 text-emerald-50 dark:text-slate-400">
@@ -29,12 +29,13 @@ const DashboardCard = ({ user }: { user: UserAuth }) => {
 
           {/* User Info */}
           <div className="mt-6 flex flex-wrap gap-3">
-            <RoleBadge role={user.role?.slug} className="px-4 py-2">
-              👑 {user.role?.name}
+            <RoleBadge role={user?.role?.slug} className="px-4 py-2">
+              👑 {user?.role?.name}
             </RoleBadge>
 
-            {user.stores.length > 0 &&
-              user.stores.map((store) => (
+            {user?.stores
+              .filter((store) => store.id === user.store_id)
+              .map((store) => (
                 <span
                   key={store.id}
                   className="rounded-full px-4 py-2 text-sm bg-white/20 text-white dark:bg-slate-800 dark:text-slate-300"

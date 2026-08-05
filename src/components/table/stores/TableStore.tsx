@@ -50,7 +50,7 @@ const TableStore = ({ openDeleteModal, openAddOwnerModal }: Props) => {
 
   const { data, isLoading } = useQuery({
     queryKey,
-    queryFn: async () => storeService.list(page, limit, debouncedSearch),
+    queryFn: async () => await storeService.list(page, limit, debouncedSearch),
     enabled: !!user,
   });
 
@@ -62,8 +62,8 @@ const TableStore = ({ openDeleteModal, openAddOwnerModal }: Props) => {
   const superAdminColumns = [
     { key: "no", label: "No", sortable: false, className: "w-16" },
     { key: "name", label: "Nama", sortable: true, className: "min-w-64" },
-    { key: "owner", label: "Owner", sortable: true, className: "w-44" },
     { key: "address", label: "Alamat", sortable: true, className: "min-w-64" },
+    { key: "owner", label: "Owner", sortable: true, className: "w-44" },
     { key: "aktif", label: "Status", sortable: true, className: "w-44" },
     { key: "aksi", label: "Aksi", sortable: false, className: "w-32" },
   ];
@@ -71,8 +71,8 @@ const TableStore = ({ openDeleteModal, openAddOwnerModal }: Props) => {
   const ownerColumns = [
     { key: "no", label: "No", sortable: false, className: "w-16" },
     { key: "name", label: "Nama", sortable: true, className: "min-w-64" },
-    { key: "owner", label: "Owner", sortable: true, className: "w-44" },
     { key: "address", label: "Alamat", sortable: true, className: "min-w-64" },
+    // { key: "owner", label: "Owner", sortable: true, className: "w-44" },
     { key: "status", label: "Status", sortable: true, className: "min-w-36" },
     { key: "orders", label: "Order", sortable: true, className: "min-w-36" },
     { key: "aksi", label: "Aksi", sortable: false, className: "w-32" },
@@ -246,17 +246,6 @@ const TableStore = ({ openDeleteModal, openAddOwnerModal }: Props) => {
                       </p>
                     </TableCell>
                     <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
-                      <div className="flex gap-2 text-theme-sm text-gray-700 dark:text-gray-400">
-                        {store.owner ? (
-                          <p>{store.owner?.name}</p>
-                        ) : (
-                          <p className="text-gray-400 dark:text-white/30">
-                            -- Belum ada owner--{" "}
-                          </p>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
                         {store.address}
                       </p>
@@ -264,6 +253,18 @@ const TableStore = ({ openDeleteModal, openAddOwnerModal }: Props) => {
 
                     {isSuperAdmin ? (
                       <>
+                        <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                          <div className="flex gap-2 text-theme-sm text-gray-700 dark:text-gray-400">
+                            {store.owner ? (
+                              <p>{store.owner?.name}</p>
+                            ) : (
+                              <p className="text-gray-400 dark:text-white/30">
+                                -- Belum ada owner--{" "}
+                              </p>
+                            )}
+                          </div>
+                        </TableCell>
+
                         <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
                           <div className="text-theme-sm text-gray-700 dark:text-gray-400">
                             <Switch

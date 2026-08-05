@@ -43,9 +43,9 @@ export const storeService = {
 
     formData.append("_method", "PUT");
     formData.append("name", payload.name);
-    formData.append("description", payload.description);
-    formData.append("address", payload.address);
-    formData.append("phone", payload.phone);
+    formData.append("description", payload.description ?? "");
+    formData.append("address", payload.address ?? "");
+    formData.append("phone", payload.phone ?? "");
 
     if (payload.image) {
       formData.append("image", payload.image);
@@ -74,6 +74,40 @@ export const storeService = {
       `/stores/${id}/status`,
       {
         is_active,
+      },
+    );
+
+    return response.data;
+  },
+
+  updateStatusOperational: async ({
+    id,
+    is_open,
+  }: {
+    id: number;
+    is_open: boolean;
+  }): Promise<ApiResponse<Store>> => {
+    const response = await api.patch<ApiResponse<Store>>(
+      `/stores/${id}/status-operational`,
+      {
+        is_open,
+      },
+    );
+
+    return response.data;
+  },
+
+  updateStatusOrder: async ({
+    id,
+    is_accept_order,
+  }: {
+    id: number;
+    is_accept_order: boolean;
+  }): Promise<ApiResponse<Store>> => {
+    const response = await api.patch<ApiResponse<Store>>(
+      `/stores/${id}/status-order`,
+      {
+        is_accept_order,
       },
     );
 

@@ -6,17 +6,11 @@ export const editStoreSchema = z.object({
     .min(1, "Nama resto/toko tidak boleh kosong")
     .max(100, "Nama toko maksimal 100 karakter"),
 
-  description: z
-    .string()
-    .min(10, "Deskripsi terlalu pendek")
-    .max(255, "Deskripsi terlalu panjang"),
+  description: z.string().max(255, "Deskripsi terlalu panjang").optional(),
 
-  phone: z
-    .string()
-    .min(10, "Nomor HP minimal 10 digit")
-    .max(20, "Nomor HP terlalu panjang"),
+  phone: z.string().max(20, "Nomor HP terlalu panjang").optional(),
 
-  address: z.string().min(5, "Alamat terlalu pendek"),
+  address: z.string().optional(),
 
   image: z
     .instanceof(File)

@@ -3,12 +3,14 @@ import type { UserAuth } from "@/types/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState } from "react";
 import { logout as logoutApi } from "@/services/authApi";
+import type { StoreAuth } from "@/types/store";
 
 type AuthContextType = {
   token: string | null;
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
   user: UserAuth | null;
   setUser: React.Dispatch<React.SetStateAction<UserAuth | null>>;
+  userStores: StoreAuth[] | null;
   authLoading: boolean;
   hasPermission: (permission: string) => boolean;
   logout: () => Promise<void>;
@@ -31,6 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.getItem("token"),
   );
   const [user, setUser] = useState<UserAuth | null>(null);
+  const [userStores, setUserStores] = useState<StoreAuth[] | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const queryClient = useQueryClient();
 
@@ -38,6 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchUser = async () => {
       if (!token) {
         setUser(null);
+        setUserStores(null);
         setAuthLoading(false);
         return;
       }
@@ -48,9 +52,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const user = await getUser();
 
         setUser(user);
+        setUserStores(user.stores);
       } catch (error) {
         console.log(error);
         setUser(null);
+        setUserStores(null);
         localStorage.removeItem("token");
         setToken(null);
       } finally {
@@ -77,6 +83,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setToken(null);
 
       setUser(null);
+      setUserStores(null);
 
       queryClient.clear();
 
@@ -91,6 +98,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken,
         user,
         setUser,
+        userStores,
         authLoading,
         hasPermission,
         logout,

@@ -1,5 +1,4 @@
 import Label from "@/components/ui/input/Label";
-import React from "react";
 
 const AddOwnerPage = () => {
   return (
@@ -66,7 +65,7 @@ const AddOwnerPage = () => {
       <div className="flex items-center justify-end w-full gap-3 mt-6">
         <button
           type="button"
-          className="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs transition-colors hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 sm:w-auto"
+          className="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs transition-colors hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200 sm:w-auto"
         >
           Close
         </button>

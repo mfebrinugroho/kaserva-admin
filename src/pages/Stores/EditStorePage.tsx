@@ -52,9 +52,9 @@ const EditStorePage = () => {
 
     reset({
       name: store.data.name,
-      description: store.data.description,
-      phone: store.data.phone,
-      address: store.data.address,
+      description: store.data.description ?? "",
+      phone: store.data.phone ?? "",
+      address: store.data.address ?? "",
       image: undefined,
       banner: undefined,
     });

@@ -43,8 +43,8 @@ export default function LoginForm() {
       setLoading(true);
       const response = await login(form);
 
-      localStorage.setItem("token", response.token);
-      setToken(response.token);
+      localStorage.setItem("token", response.data.token);
+      setToken(response.data.token);
       navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -195,7 +195,12 @@ export default function LoginForm() {
                   </Link>
                 </div>
                 <div>
-                  <Button className="w-full" size="sm" type="submit">
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    type="submit"
+                    disabled={loading}
+                  >
                     Sign in
                   </Button>
                 </div>

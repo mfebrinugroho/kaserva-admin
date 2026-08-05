@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 interface SwitchProps {
   activeLabel?: string;
   inactiveLabel?: string;
@@ -17,32 +15,37 @@ const Switch = ({
   onChange,
   color = "success", // Default to success color
 }: SwitchProps) => {
-  const [isChecked, setIsChecked] = useState(checked);
+  // const [isChecked, setIsChecked] = useState(checked);
+
+  // const handleToggle = () => {
+  //   if (disabled) return;
+  //   const newCheckedState = !isChecked;
+  //   setIsChecked(newCheckedState);
+  //   if (onChange) {
+  //     onChange(newCheckedState);
+  //   }
+  // };
 
   const handleToggle = () => {
     if (disabled) return;
-    const newCheckedState = !isChecked;
-    setIsChecked(newCheckedState);
-    if (onChange) {
-      onChange(newCheckedState);
-    }
+    onChange?.(!checked);
   };
 
   const switchColors =
     color === "success"
       ? {
-          background: isChecked
+          background: checked
             ? "bg-success-500 "
             : "bg-gray-200 dark:bg-white/10", // success version
-          knob: isChecked
+          knob: checked
             ? "translate-x-full bg-white"
             : "translate-x-0 bg-white",
         }
       : {
-          background: isChecked
+          background: checked
             ? "bg-gray-800 dark:bg-white/10"
             : "bg-gray-200 dark:bg-white/10", // Gray version
-          knob: isChecked
+          knob: checked
             ? "translate-x-full bg-white"
             : "translate-x-0 bg-white",
         };

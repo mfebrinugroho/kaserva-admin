@@ -1,4 +1,3 @@
-import type { ApiResponse } from "@/types/api";
 import type { Role } from "@/types/role";
 import type { Permission } from "@/types/permission";
 import type { StoreAuth } from "./store";
@@ -28,11 +27,13 @@ export interface UserDetail extends User {
 }
 
 export interface UserAuth extends User {
+  store_id: number;
   role: Role;
   permissions: Permission[];
   stores: StoreAuth[];
 }
 
-export interface AuthResponse<T> extends ApiResponse<T> {
+export interface AuthResponse {
+  user: User;
   token: string;
 }

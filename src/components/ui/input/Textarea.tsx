@@ -26,7 +26,7 @@ const Textarea = ({
   ref,
   ...props
 }: TextareaProps) => {
-  let textareaClasses = `w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs focus:outline-hidden ${className}`;
+  let textareaClasses = `w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs focus:outline-hidden placeholder:text-gray-400 dark:placeholder:text-white/30 ${className}`;
 
   if (disabled) {
     textareaClasses +=
