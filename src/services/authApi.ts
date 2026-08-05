@@ -28,7 +28,7 @@ export const login = async (
 
   const response = await api.post("/login", payload);
 
-  return response.data.data;
+  return response.data;
 };
 
 // GET AUTH USER

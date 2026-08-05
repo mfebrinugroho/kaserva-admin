@@ -43,8 +43,10 @@ export default function LoginForm() {
       setLoading(true);
       const response = await login(form);
 
-      localStorage.setItem("token", response.data.token);
-      setToken(response.data.token);
+      console.log(response);
+
+      localStorage.setItem("token", response.token);
+      setToken(response.token);
       navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {

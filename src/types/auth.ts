@@ -35,5 +35,4 @@ export interface UserAuth extends User {
 
 export interface AuthResponse {
   user: User;
-  token: string;
 }
