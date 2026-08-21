@@ -4,10 +4,10 @@ import OperationalStatus from "@/components/dashboard/OperationalStatus";
 import RecentOrders from "@/components/dashboard/RecentOrders";
 import StatsGrid from "@/components/dashboard/StatsGrid";
 import TopSellingMenus from "@/components/dashboard/TopSellingMenus";
-import { useAuth } from "@/contexts/AuthContext";
+import { useRole } from "@/hooks/useRole";
 
 export default function Home() {
-  const { user } = useAuth();
+  const { isSuperAdmin } = useRole();
 
   return (
     <>
@@ -16,15 +16,17 @@ export default function Home() {
         description="OrderKuy is Application POS"
       />
 
-      <DashboardCard user={user} />
+      <DashboardCard />
 
       {/* <div className="mt-8">
         <DashNew />
       </div> */}
 
-      <div className="mt-8">
-        <OperationalStatus />
-      </div>
+      {!isSuperAdmin && (
+        <div className="mt-8">
+          <OperationalStatus />
+        </div>
+      )}
 
       <div className="mt-8">
         <StatsGrid />

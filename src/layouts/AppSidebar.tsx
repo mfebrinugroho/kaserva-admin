@@ -5,6 +5,7 @@ import {
   ChevronDownIcon,
   Ellipsis,
   LayoutDashboard,
+  Pizza,
   SquareMenu,
   Store,
   Users,
@@ -263,10 +264,13 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-        <Link to="/">
+        <Link
+          to="/"
+          className="flex items-center gap-2 group shrink-0 justify-center"
+        >
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              <img
+              {/* <img
                 className="dark:hidden"
                 src="/images/logo/logo.svg"
                 alt="Logo"
@@ -279,7 +283,13 @@ const AppSidebar: React.FC = () => {
                 alt="Logo"
                 width={150}
                 height={40}
-              />
+              /> */}
+              <span className="grid place-items-center h-9 w-9 rounded-xl bg-primary-500 text-white shadow-sm shadow-gold-500/30 transition-transform group-hover:-rotate-6">
+                <Pizza size={24} strokeWidth={2.4} />
+              </span>
+              <span className="font-display text-lg font-semibold tracking-tight text-ink-900 dark:text-white">
+                OrderKuy
+              </span>
             </>
           ) : (
             <img

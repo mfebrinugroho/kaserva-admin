@@ -1,7 +1,9 @@
-import type { UserAuth } from "@/types/auth";
+import { useAuth } from "@/contexts/AuthContext";
 import RoleBadge from "../ui/badge/RoleBadge";
 
-const DashboardCard = ({ user }: { user: UserAuth | null }) => {
+const DashboardCard = () => {
+  const { user } = useAuth();
+
   return (
     <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-linear-to-br from-emerald-500 via-emerald-600 to-teal-600 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950 p-8 shadow-2xl">
       {/* Background Glow */}
