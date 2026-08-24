@@ -1,32 +1,72 @@
+import BackButton from "@/components/button/BackButton";
+import SubmitButton from "@/components/button/SubmitButton";
 import Input from "@/components/ui/input/Input";
 import Label from "@/components/ui/input/Label";
 import Select from "@/components/ui/input/Select";
 import Textarea from "@/components/ui/input/Textarea";
+import { useCreateStore } from "@/hooks/mutations/useCreateStore";
 import { PATH } from "@/routes/path";
-import type { CreateStoreFormInput } from "@/schemas/createStore.schema";
-import { type FieldErrors, type UseFormRegister } from "react-hook-form";
-import { Link } from "react-router";
+import {
+  storeSchema,
+  type StoreFormInput,
+  type StoreFormOutput,
+} from "@/schemas/store.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
-interface StoreFormProps {
-  onSubmit: React.FormEventHandler<HTMLFormElement>;
-  register: UseFormRegister<CreateStoreFormInput>;
-  errors: FieldErrors<CreateStoreFormInput>;
-  isSubmitting: boolean;
-  isDirty: boolean;
-  isPending: boolean;
-}
+export const StoreCreateForm = () => {
+  const navigate = useNavigate();
 
-export const CreateStoreForm = ({
-  onSubmit,
-  register,
-  errors,
-  isSubmitting,
-  isDirty,
-  isPending,
-}: StoreFormProps) => {
+  const createStore = useCreateStore();
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isDirty },
+  } = useForm<StoreFormInput, unknown, StoreFormOutput>({
+    defaultValues: {
+      name: "",
+      description: "",
+      phone: "",
+      address: "",
+      is_active: "",
+    },
+    resolver: zodResolver(storeSchema),
+  });
+
+  const onSubmit = (data: StoreFormOutput) => {
+    createStore.mutate(data, {
+      onSuccess: (response) => {
+        toast.success(response.message);
+        navigate(PATH.STORES);
+      },
+
+      onError: (error) => {
+        if (axios.isAxiosError(error) && error.response?.status === 422) {
+          const validationErrors = error.response.data.errors;
+
+          Object.entries(validationErrors).forEach(([field, messages]) => {
+            setError(field as keyof StoreFormInput, {
+              type: "server",
+              message: (messages as string[])[0],
+            });
+          });
+
+          return;
+        }
+
+        toast.error("Terjadi kesalahan.");
+      },
+    });
+  };
+
   return (
     <>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-6">
           <div>
             <Label htmlFor="name">Nama Resto/Toko</Label>
@@ -95,19 +135,11 @@ export const CreateStoreForm = ({
           </div>
 
           <div className="flex justify-center sm:justify-end gap-4">
-            <Link
-              to={PATH.STORES}
-              className="w-full sm:w-30 text-center rounded-lg bg-error-500 px-4 py-3 text-sm font-medium text-white transition shadow-theme-xs hover:bg-error-600"
-            >
-              Kembali
-            </Link>
-            <button
-              disabled={!isDirty || isSubmitting || isPending}
-              type="submit"
-              className="w-full sm:w-30 rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white transition shadow-theme-xs hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-brand-500"
-            >
-              {isPending ? "Menyimpan..." : "Simpan"}
-            </button>
+            <BackButton url={PATH.STORES} />
+            <SubmitButton
+              disabled={!isDirty || createStore.isPending}
+              text={createStore.isPending ? "Menyimpan..." : "Simpan"}
+            />
           </div>
         </div>
       </form>

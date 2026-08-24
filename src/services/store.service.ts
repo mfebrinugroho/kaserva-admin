@@ -1,18 +1,24 @@
 import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
 import api from "../libs/axios";
 import type { Store } from "@/types/store";
-import type { CreateStoreFormData } from "@/schemas/createStore.schema";
-import type { EditStoreFormData } from "@/schemas/editStore.schema";
+import type { StoreFormOutput } from "@/schemas/store.schema";
+import type { UpdateStoreFormData } from "@/schemas/updateStore.schema";
 import type { User } from "@/types/user";
-import type { AddOwnerFormData } from "@/schemas/addOwner.schema";
+import type { AddOwnerFormOutput } from "@/schemas/addOwner.schema";
+
+interface StoreQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
 
 export const storeService = {
   // Ambil semua data user dengan pagination
-  list: async (
-    page: number = 1,
-    limit: number = 10,
-    search: string,
-  ): Promise<ApiPaginatedResponse<Store>> => {
+  list: async ({
+    page = 1,
+    limit = 10,
+    search = "",
+  }: StoreQueryParams): Promise<ApiPaginatedResponse<Store>> => {
     const response = await api.get<ApiPaginatedResponse<Store>>(
       `/stores?page=${page}&limit=${limit}&search=${search}`,
     );
@@ -21,7 +27,7 @@ export const storeService = {
   },
 
   // API Untuk menambah/create data store
-  create: async (payload: CreateStoreFormData): Promise<ApiResponse<Store>> => {
+  create: async (payload: StoreFormOutput): Promise<ApiResponse<Store>> => {
     const response = await api.post<ApiResponse<Store>>("/stores", payload);
 
     return response.data;
@@ -37,7 +43,7 @@ export const storeService = {
   // Api untuk mengupdate data store
   update: async (
     id: number,
-    payload: EditStoreFormData,
+    payload: UpdateStoreFormData,
   ): Promise<ApiResponse<Store>> => {
     const formData = new FormData();
 
@@ -121,7 +127,9 @@ export const storeService = {
     return response.data;
   },
 
-  addOwner: async (payload: AddOwnerFormData): Promise<ApiResponse<Store>> => {
+  addOwner: async (
+    payload: AddOwnerFormOutput,
+  ): Promise<ApiResponse<Store>> => {
     const response = await api.post<ApiResponse<Store>>(
       "/stores/store-owner",
       payload,

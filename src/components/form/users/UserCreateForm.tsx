@@ -2,31 +2,74 @@ import Input from "@/components/ui/input/Input";
 import Label from "@/components/ui/input/Label";
 import Select from "@/components/ui/input/Select";
 
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-import type { Role } from "@/types/role";
-import type { CreateUserFormData } from "@/schemas/user.schema";
+import {
+  userSchema,
+  type UserFormInput,
+  type UserFormOutput,
+} from "@/schemas/user.schema";
 import { PATH } from "@/routes/path";
-import { Link } from "react-router";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRoles } from "@/hooks/queries/useRoles";
+import BackButton from "@/components/button/BackButton";
+import SubmitButton from "@/components/button/SubmitButton";
+import { useCreateUser } from "@/hooks/mutations/useCreateUser";
+import { toast } from "sonner";
+import { useNavigate } from "react-router";
+import axios from "axios";
 
-interface UserFormProps {
-  onSubmit: React.FormEventHandler<HTMLFormElement>;
-  register: UseFormRegister<CreateUserFormData>;
-  errors: FieldErrors<CreateUserFormData>;
-  roles: Role[];
-  isSubmitting: boolean;
-}
+const UserCreateForm = () => {
+  const navigate = useNavigate();
+  const { data: roles, isLoading } = useRoles();
 
-const UserCreateForm = ({
-  onSubmit,
-  register,
-  errors,
-  roles,
-  isSubmitting,
-}: UserFormProps) => {
+  const createUser = useCreateUser();
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isDirty },
+  } = useForm<UserFormInput, unknown, UserFormOutput>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+      role_id: "",
+    },
+    resolver: zodResolver(userSchema),
+  });
+
+  const onSubmit = (data: UserFormOutput) => {
+    createUser.mutate(data, {
+      onSuccess: (response) => {
+        toast.success(response.message);
+        navigate(PATH.USERS);
+      },
+
+      onError: (error) => {
+        if (axios.isAxiosError(error) && error.response?.status === 422) {
+          const validationErrors = error.response.data.errors;
+
+          Object.entries(validationErrors).forEach(([field, messages]) => {
+            setError(field as keyof UserFormInput, {
+              type: "server",
+              message: (messages as string[])[0],
+            });
+          });
+
+          return;
+        }
+
+        toast.error("Terjadi kesalahan.");
+      },
+    });
+  };
+
   return (
     <>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-6">
           <div>
             <Label htmlFor="name">Nama</Label>
@@ -79,15 +122,13 @@ const UserCreateForm = ({
           <div>
             <Label htmlFor="role_id">Role</Label>
             <Select
-              {...register("role_id", {
-                valueAsNumber: true,
-              })}
-              placeholder="-- Pilih Role --"
+              placeholder={isLoading ? "-- Memuat Role --" : "-- Pilih Role --"}
               className="dark:bg-dark-900"
               error={!!errors.role_id}
               hint={errors.role_id?.message}
+              {...register("role_id")}
             >
-              {roles.map((role) => (
+              {roles?.data.map((role) => (
                 <option
                   key={role.id}
                   value={role.id}
@@ -100,19 +141,11 @@ const UserCreateForm = ({
           </div>
 
           <div className="flex justify-center sm:justify-end gap-4">
-            <Link
-              to={PATH.USERS}
-              className="w-full sm:w-30 text-center rounded-lg bg-error-500 px-4 py-3 text-sm font-medium text-white transition shadow-theme-xs hover:bg-error-600"
-            >
-              Kembali
-            </Link>
-            <button
-              disabled={isSubmitting}
-              type="submit"
-              className="w-full sm:w-30 rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white transition shadow-theme-xs hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-brand-500"
-            >
-              {isSubmitting ? "Loading..." : "Simpan"}
-            </button>
+            <BackButton url={PATH.USERS} />
+            <SubmitButton
+              disabled={!isDirty || createUser.isPending}
+              text={createUser.isPending ? "Menyimpan..." : "Simpan"}
+            />
           </div>
         </div>
       </form>

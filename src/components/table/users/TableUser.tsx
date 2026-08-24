@@ -6,7 +6,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import type { PaginationMeta } from "@/types/api";
 import type { User } from "@/types/user";
 import { ChevronsUpDown, LoaderCircle, Pencil, Trash2 } from "lucide-react";
 import { getRowNumber } from "@/utils/rowNumber";
@@ -16,54 +15,47 @@ import Pagination from "@/components/ui/table/Pagination";
 import { Link } from "react-router";
 import { PATH } from "@/routes/path";
 import RoleBadge from "@/components/ui/badge/RoleBadge";
+import { useUsers } from "@/hooks/queries/useUsers";
+import { useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { cn } from "@/libs/utils";
 
 type Props = {
-  users: User[];
-  meta?: PaginationMeta | null;
-  page: number;
-  search: string;
-  setPage: (page: number) => void;
-  setLimit: (perPage: number) => void;
-  setSearch: (search: string) => void;
-  loading: boolean;
-  openDeleteModal: (user: User) => void;
+  onDelete: (user: User) => void;
 };
 
-const TableUser = ({
-  users,
-  meta,
-  page,
-  search,
-  setPage,
-  setLimit,
-  setSearch,
-  loading,
-  openDeleteModal,
-}: Props) => {
+const TableUser = ({ onDelete }: Props) => {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [search, setSearch] = useState("");
+
+  const debouncedSearch = useDebounce(search, 300);
+
+  const { data, isLoading } = useUsers({
+    page,
+    limit,
+    search: debouncedSearch,
+  });
+
+  const users = data?.data || [];
+  const meta = data?.meta;
+
+  const headerColumns = [
+    { key: "no", label: "No", sortable: true, className: "w-24" },
+    { key: "name", label: "Nama", sortable: true, className: "min-w-64" },
+    { key: "email", label: "Email", sortable: true, className: "min-w-64" },
+    { key: "role", label: "Role", sortable: true, className: "w-64" },
+    { key: "aksi", label: "Aksi", sortable: false, className: "w-32" },
+  ];
+
   return (
     <>
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white pt-4 dark:border-white/5 dark:bg-white/3">
         <div className="mb-4 flex flex-col gap-2 px-4 sm:flex-row sm:items-center sm:justify-between">
-          <PerPage onChange={(e) => setLimit(Number(e.target.value))}>
-            <option
-              value={10}
-              className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
-            >
-              10
-            </option>
-            <option
-              value={25}
-              className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
-            >
-              25
-            </option>
-            <option
-              value={50}
-              className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
-            >
-              50
-            </option>
-          </PerPage>
+          <PerPage
+            onChange={(e) => setLimit(Number(e.target.value))}
+            options={[10, 25, 50]}
+          />
           <InputSearch
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -72,109 +64,54 @@ const TableUser = ({
         </div>
         <div className="max-w-full overflow-x-auto">
           <Table>
-            {/* Table Header */}
-            <TableHeader className="border-b border-gray-200 dark:border-gray-800 ">
-              <TableRow className="grid grid-cols-9 border-t border-gray-200 dark:border-gray-800">
-                <TableCell
-                  isHeader
-                  className="col-span-1 flex items-center border-r border-gray-200 px-4 py-3 dark:border-gray-800"
-                >
-                  <div className="flex w-full cursor-pointer items-center justify-between">
-                    <p className="text-theme-xs font-medium text-gray-700 dark:text-gray-400">
-                      Nomor
-                    </p>
-                    <span className="flex flex-col gap-0.5">
-                      <ChevronsUpDown
-                        size={15}
-                        className="text-gray-300 dark:text-gray-700"
-                      />
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="col-span-2 flex items-center border-r border-gray-200 px-4 py-3 dark:border-gray-800"
-                >
-                  <div className="flex w-full cursor-pointer items-center justify-between">
-                    <p className="text-theme-xs font-medium text-gray-700 dark:text-gray-400">
-                      Nama
-                    </p>
-                    <span className="flex flex-col gap-0.5">
-                      <ChevronsUpDown
-                        size={15}
-                        className="text-gray-300 dark:text-gray-700"
-                      />
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="col-span-3 flex items-center border-r border-gray-200 px-4 py-3 dark:border-gray-800"
-                >
-                  <div className="flex w-full cursor-pointer items-center justify-between">
-                    <p className="text-theme-xs font-medium text-gray-700 dark:text-gray-400">
-                      Email
-                    </p>
-                    <span className="flex flex-col gap-0.5">
-                      <ChevronsUpDown
-                        size={15}
-                        className="text-gray-300 dark:text-gray-700"
-                      />
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="col-span-2 flex items-center border-r border-gray-200 px-4 py-3 dark:border-gray-800"
-                >
-                  <div className="flex w-full cursor-pointer items-center justify-between">
-                    <p className="text-theme-xs font-medium text-gray-700 dark:text-gray-400">
-                      Role
-                    </p>
-                    <span className="flex flex-col gap-0.5">
-                      <ChevronsUpDown
-                        size={15}
-                        className="text-gray-300 dark:text-gray-700"
-                      />
-                    </span>
-                  </div>
-                </TableCell>
-
-                <TableCell
-                  isHeader
-                  className="col-span-1 flex items-center border-r border-gray-200 px-4 py-3 dark:border-gray-800"
-                >
-                  <div className="flex w-full cursor-pointer items-center justify-between">
-                    <p className="text-theme-xs font-medium text-gray-700 dark:text-gray-400">
-                      Action
-                    </p>
-                    <span className="flex flex-col gap-0.5">
-                      <ChevronsUpDown
-                        size={15}
-                        className="text-gray-300 dark:text-gray-700"
-                      />
-                    </span>
-                  </div>
-                </TableCell>
+            <TableHeader>
+              <TableRow variant="header">
+                {headerColumns.map((column) => (
+                  <TableCell
+                    key={column.key}
+                    isHeader
+                    className={column.className}
+                    variant="header"
+                  >
+                    <div
+                      className={cn(
+                        "flex w-full items-center justify-between ",
+                        column.sortable && "cursor-pointer",
+                      )}
+                    >
+                      <p className="text-theme-xs font-medium text-gray-700 dark:text-gray-400">
+                        {column.label}
+                      </p>
+                      {column.sortable && (
+                        <span className="flex flex-col gap-0.5">
+                          <ChevronsUpDown
+                            size={15}
+                            className="text-gray-300 dark:text-gray-700"
+                          />
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHeader>
 
             {/* Table Body */}
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/5">
-              {loading ? (
-                <TableRow className=" border-t border-gray-100 dark:border-gray-800">
-                  <TableCell className="flex items-center border border-gray-100 px-4 py-[17.5px] dark:border-gray-800 justify-center">
-                    <p className="text-theme-sm text-gray-700 dark:text-gray-400">
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={headerColumns.length}>
+                    <div className="flex justify-center items-center">
                       <LoaderCircle
                         size={24}
-                        className="animate-spin [animation-duration:1.2s]"
+                        className="animate-spin [animation-duration:1.2s] text-theme-sm text-gray-700 dark:text-gray-400"
                       />
-                    </p>
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : users.length === 0 ? (
-                <TableRow className=" border-t border-gray-100 dark:border-gray-800">
-                  <TableCell className="flex items-center border border-gray-100 px-4 py-[17.5px] dark:border-gray-800 justify-center">
+                <TableRow>
+                  <TableCell colSpan={headerColumns.length}>
                     <p className="text-theme-sm text-gray-700 dark:text-gray-400 font-semibold">
                       Data user tidak ditemukan.
                     </p>
@@ -182,11 +119,8 @@ const TableUser = ({
                 </TableRow>
               ) : (
                 users.map((user, index) => (
-                  <TableRow
-                    key={user.id}
-                    className="grid grid-cols-9 border-t border-gray-100 dark:border-gray-800"
-                  >
-                    <TableCell className="col-span-1 flex items-center border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                  <TableRow key={user.id}>
+                    <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
                         {getRowNumber(
                           meta?.current_page ?? 1,
@@ -195,29 +129,28 @@ const TableUser = ({
                         )}
                       </p>
                     </TableCell>
-                    <TableCell className="col-span-2 flex items-center border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                    <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
                         {user.name}
                       </p>
                     </TableCell>
-                    <TableCell className="col-span-3 flex items-center border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                    <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
                         {user.email}
                       </p>
                     </TableCell>
-                    <TableCell className="col-span-2 flex items-center border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                    <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
-                        {/* {user.role.name} */}
                         <RoleBadge role={user.role.slug}>
                           {user.role.name}
                         </RoleBadge>
                       </p>
                     </TableCell>
-                    <TableCell className="col-span-1 flex items-center border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                    <TableCell>
                       <div className="flex w-full items-center gap-2">
                         <button
                           className="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500"
-                          onClick={() => openDeleteModal(user)}
+                          onClick={() => onDelete(user)}
                         >
                           <Trash2 size={18} />
                         </button>

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createStoreSchema = z.object({
+export const storeSchema = z.object({
   name: z
     .string()
     .min(1, "Nama harus diisi!")
@@ -18,5 +18,5 @@ export const createStoreSchema = z.object({
     .transform((value) => value === "true"),
 });
 
-export type CreateStoreFormData = z.infer<typeof createStoreSchema>;
-export type CreateStoreFormInput = z.input<typeof createStoreSchema>;
+export type StoreFormInput = z.input<typeof storeSchema>;
+export type StoreFormOutput = z.output<typeof storeSchema>;

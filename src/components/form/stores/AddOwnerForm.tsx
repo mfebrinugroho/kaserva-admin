@@ -2,7 +2,8 @@ import Label from "@/components/ui/input/Label";
 import Select from "@/components/ui/input/Select";
 import {
   addOwnerSchema,
-  type AddOwnerFormData,
+  type AddOwnerFormInput,
+  type AddOwnerFormOutput,
 } from "@/schemas/addOwner.schema";
 import { storeService } from "@/services/store.service";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,13 +19,13 @@ interface Props {
 const AddOwnerForm = ({ onClose }: Props) => {
   const queryClient = useQueryClient();
 
-  const { data: owners } = useQuery({
-    queryKey: ["owners"],
+  const { data: owners, isLoading: isLoadingOwners } = useQuery({
+    queryKey: ["owners", "options"],
     queryFn: async () => storeService.availableOwners(),
   });
 
-  const { data: stores } = useQuery({
-    queryKey: ["stores"],
+  const { data: stores, isLoading: isLoadingStores } = useQuery({
+    queryKey: ["stores", "options"],
     queryFn: async () => storeService.availableStores(),
   });
 
@@ -32,11 +33,11 @@ const AddOwnerForm = ({ onClose }: Props) => {
     register,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting, isDirty },
-  } = useForm<AddOwnerFormData>({
+    formState: { errors, isDirty },
+  } = useForm<AddOwnerFormInput, unknown, AddOwnerFormOutput>({
     defaultValues: {
-      user_id: 0,
-      store_id: 0,
+      user_id: "",
+      store_id: "",
     },
     resolver: zodResolver(addOwnerSchema),
   });
@@ -57,7 +58,7 @@ const AddOwnerForm = ({ onClose }: Props) => {
         const validationErrors = error.response.data.errors;
 
         Object.entries(validationErrors).forEach(([field, messages]) => {
-          setError(field as keyof AddOwnerFormData, {
+          setError(field as keyof AddOwnerFormInput, {
             type: "server",
             message: (messages as string[])[0],
           });
@@ -70,7 +71,7 @@ const AddOwnerForm = ({ onClose }: Props) => {
     },
   });
 
-  const onSubmit = (data: AddOwnerFormData) => {
+  const onSubmit = (data: AddOwnerFormOutput) => {
     addOwnerMutation.mutate(data);
   };
 
@@ -84,12 +85,11 @@ const AddOwnerForm = ({ onClose }: Props) => {
         <div>
           <Label htmlFor="owner">Pilih Owner</Label>
           <Select
-            placeholder="--Pilih Owner--"
+            placeholder={
+              isLoadingOwners ? "-- Memuat Data Owner --" : "-- Pilih Owner --"
+            }
             id="owner"
-            placeholderValue={0}
-            {...register("user_id", {
-              valueAsNumber: true,
-            })}
+            {...register("user_id")}
             error={!!errors.user_id}
             hint={errors.user_id?.message}
           >
@@ -107,12 +107,13 @@ const AddOwnerForm = ({ onClose }: Props) => {
         <div>
           <Label htmlFor="store">Pilih Resto/Toko</Label>
           <Select
-            placeholder="--Pilih Resto/Toko"
+            placeholder={
+              isLoadingStores
+                ? "-- Memuat Data Resto/Toko --"
+                : "-- Pilih Resto/Toko --"
+            }
             id="store"
-            placeholderValue={0}
-            {...register("store_id", {
-              valueAsNumber: true,
-            })}
+            {...register("store_id")}
             error={!!errors.store_id}
             hint={errors.store_id?.message}
           >
@@ -139,7 +140,7 @@ const AddOwnerForm = ({ onClose }: Props) => {
         </button>
         <button
           type="submit"
-          disabled={!isDirty || isSubmitting || addOwnerMutation.isPending}
+          disabled={!isDirty || addOwnerMutation.isPending}
           className="flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 sm:w-auto hover:cursor-pointer disabled:hover:bg-brand-500 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {addOwnerMutation.isPending ? "Menyimpan..." : "Simpan"}

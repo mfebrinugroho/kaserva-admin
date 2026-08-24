@@ -1,8 +1,12 @@
 import { z } from "zod";
 
 export const addOwnerSchema = z.object({
-  user_id: z.number().min(1, "Owner wajib dipilih"),
-  store_id: z.number().min(1, "Resto/Toko wajib dipilih"),
+  user_id: z.string().min(1, "Owner wajib dipilih").pipe(z.coerce.number()),
+  store_id: z
+    .string()
+    .min(1, "Resto/Toko wajib dipilih")
+    .pipe(z.coerce.number()),
 });
 
-export type AddOwnerFormData = z.output<typeof addOwnerSchema>;
+export type AddOwnerFormInput = z.input<typeof addOwnerSchema>;
+export type AddOwnerFormOutput = z.output<typeof addOwnerSchema>;

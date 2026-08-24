@@ -1,16 +1,23 @@
 import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
 import api from "../libs/axios";
-import type { User, UserForm } from "@/types/user";
-import type { EditUserFormData } from "@/schemas/editUser.schema";
+import type { User } from "@/types/user";
+import type { UpdateUserFormOutput } from "@/schemas/updateUser.schema";
 import type { UserAuth } from "@/types/auth";
+import type { UserFormOutput } from "@/schemas/user.schema";
+
+interface UserQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
 
 export const userService = {
   // Ambil semua data user dengan pagination
-  list: async (
-    page: number = 1,
-    limit: number = 10,
-    search: string,
-  ): Promise<ApiPaginatedResponse<User>> => {
+  list: async ({
+    page = 1,
+    limit = 10,
+    search = "",
+  }: UserQueryParams): Promise<ApiPaginatedResponse<User>> => {
     const response = await api.get<ApiPaginatedResponse<User>>(
       `/users?page=${page}&limit=${limit}&search=${search}`,
     );
@@ -19,7 +26,7 @@ export const userService = {
   },
 
   // API Untuk menambah/create data user
-  create: async (payload: UserForm): Promise<ApiResponse<User>> => {
+  create: async (payload: UserFormOutput): Promise<ApiResponse<User>> => {
     const response = await api.post<ApiResponse<User>>("/users", payload);
 
     return response.data;
@@ -35,7 +42,7 @@ export const userService = {
   // Api untuk mengupdate data user
   update: async (
     id: number,
-    payload: EditUserFormData,
+    payload: UpdateUserFormOutput,
   ): Promise<ApiResponse<User>> => {
     const response = await api.put<ApiResponse<User>>(`/users/${id}`, payload);
 

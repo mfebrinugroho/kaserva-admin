@@ -1,38 +1,104 @@
+import BackButton from "@/components/button/BackButton";
+import SubmitButton from "@/components/button/SubmitButton";
+import FormSkeleton from "@/components/loading/FormSkeleton";
 import FileInput from "@/components/ui/input/FileInput";
 import Input from "@/components/ui/input/Input";
 import Label from "@/components/ui/input/Label";
 import Textarea from "@/components/ui/input/Textarea";
+import { useUpdateStore } from "@/hooks/mutations/useUpdateStore";
+import { useStore } from "@/hooks/queries/useStore";
 import { PATH } from "@/routes/path";
-import type { EditStoreFormData } from "@/schemas/editStore.schema";
 import {
-  Controller,
-  type Control,
-  type FieldErrors,
-  type UseFormRegister,
-} from "react-hook-form";
-import { Link } from "react-router";
+  updateStoreSchema,
+  type UpdateStoreFormData,
+} from "@/schemas/updateStore.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
-interface StoreFormProps {
-  // onSubmit: React.FormEventHandler<HTMLFormElement>;
-  onSubmit: (e?: React.BaseSyntheticEvent) => void | Promise<void>;
-  register: UseFormRegister<EditStoreFormData>;
-  errors: FieldErrors<EditStoreFormData>;
-  isSubmitting: boolean;
-  isPending: boolean;
-  control: Control<EditStoreFormData>;
+interface Props {
+  storeId: number;
 }
 
-const EditStoreForm = ({
-  onSubmit,
-  register,
-  errors,
-  isSubmitting,
-  control,
-  isPending,
-}: StoreFormProps) => {
+const StoreEditForm = ({ storeId }: Props) => {
+  const navigate = useNavigate();
+  const { data: store, isLoading: isLoadingStore } = useStore(storeId);
+
+  const updateStore = useUpdateStore();
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    setError,
+    formState: { errors, isDirty },
+  } = useForm<UpdateStoreFormData>({
+    defaultValues: {
+      name: "",
+      description: "",
+      phone: "",
+      address: "",
+      image: undefined,
+      banner: undefined,
+    },
+    resolver: zodResolver(updateStoreSchema),
+  });
+
+  useEffect(() => {
+    if (!store) return;
+
+    reset({
+      name: store.data.name,
+      description: store.data.description,
+      phone: store.data.phone,
+      address: store.data.address,
+      image: undefined,
+      banner: undefined,
+    });
+  }, [store, reset]);
+
+  const onSubmit = (data: UpdateStoreFormData) => {
+    updateStore.mutate(
+      {
+        storeId,
+        data,
+      },
+      {
+        onSuccess: (response) => {
+          toast.success(response.message);
+          navigate(PATH.STORES);
+        },
+        onError: (error) => {
+          if (axios.isAxiosError(error) && error.response?.status === 422) {
+            const validationErrors = error.response.data.errors;
+
+            Object.entries(validationErrors).forEach(([field, messages]) => {
+              setError(field as keyof UpdateStoreFormData, {
+                type: "server",
+                message: (messages as string[])[0],
+              });
+            });
+
+            return;
+          }
+
+          toast.error("Terjadi kesalahan.");
+        },
+      },
+    );
+  };
+
+  if (isLoadingStore || !store) {
+    return <FormSkeleton />;
+  }
+
   return (
     <>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-6">
           <div>
             <Label htmlFor="name">Nama Resto/Toko</Label>
@@ -115,19 +181,11 @@ const EditStoreForm = ({
           </div>
 
           <div className="flex justify-center sm:justify-end gap-4">
-            <Link
-              to={PATH.STORES}
-              className="w-full sm:w-30 text-center rounded-lg bg-error-500 px-4 py-3 text-sm font-medium text-white transition shadow-theme-xs hover:bg-error-600"
-            >
-              Kembali
-            </Link>
-            <button
-              disabled={isSubmitting || isPending}
-              type="submit"
-              className="w-full sm:w-30 rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white transition shadow-theme-xs hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-brand-500"
-            >
-              {isPending ? "Menyimpan..." : "Simpan"}
-            </button>
+            <BackButton url={PATH.STORES} />
+            <SubmitButton
+              disabled={!isDirty || updateStore.isPending}
+              text={updateStore.isPending ? "Menyimpan..." : "Simpan"}
+            />
           </div>
         </div>
       </form>
@@ -135,4 +193,4 @@ const EditStoreForm = ({
   );
 };
 
-export default EditStoreForm;
+export default StoreEditForm;

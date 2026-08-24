@@ -8,7 +8,6 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   children: React.ReactNode;
   className?: string;
   ref?: React.Ref<HTMLSelectElement>;
-  placeholderValue?: number | string;
 }
 
 const Select = ({
@@ -18,7 +17,6 @@ const Select = ({
   error = false,
   children,
   ref,
-  placeholderValue = "",
   ...props
 }: SelectProps) => {
   let inputClasses = `h-11 w-full appearance-none rounded-lg border px-4 py-2.5 pr-11 text-sm shadow-theme-xs focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90  ${className}`;
@@ -34,7 +32,7 @@ const Select = ({
       <div className="relative">
         <select ref={ref} className={inputClasses} {...props}>
           <option
-            value={placeholderValue}
+            value=""
             disabled
             className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
           >

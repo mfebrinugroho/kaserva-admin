@@ -98,26 +98,10 @@ const TableMenu = () => {
     <>
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white pt-4 dark:border-white/5 dark:bg-white/3">
         <div className="mb-4 flex flex-col gap-2 px-4 sm:flex-row sm:items-center sm:justify-between">
-          <PerPage onChange={(e) => setLimit(Number(e.target.value))}>
-            <option
-              value={10}
-              className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
-            >
-              10
-            </option>
-            <option
-              value={25}
-              className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
-            >
-              25
-            </option>
-            <option
-              value={50}
-              className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
-            >
-              50
-            </option>
-          </PerPage>
+          <PerPage
+            onChange={(e) => setLimit(Number(e.target.value))}
+            options={[10, 25, 50]}
+          />
 
           <div className="flex flex-col sm:flex-row sm:justify-center gap-2">
             <InputSearch

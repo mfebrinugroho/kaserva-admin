@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const editStoreSchema = z.object({
+export const updateStoreSchema = z.object({
   name: z
     .string()
     .min(1, "Nama resto/toko tidak boleh kosong")
@@ -47,4 +47,4 @@ export const editStoreSchema = z.object({
     .optional(),
 });
 
-export type EditStoreFormData = z.infer<typeof editStoreSchema>;
+export type UpdateStoreFormData = z.infer<typeof updateStoreSchema>;

@@ -1,30 +1,103 @@
+import BackButton from "@/components/button/BackButton";
+import SubmitButton from "@/components/button/SubmitButton";
+import FormSkeleton from "@/components/loading/FormSkeleton";
 import Input from "@/components/ui/input/Input";
 import Label from "@/components/ui/input/Label";
 import Select from "@/components/ui/input/Select";
+import { useUpdateUser } from "@/hooks/mutations/useUpdateUser";
+import { useRoles } from "@/hooks/queries/useRoles";
+import { useUser } from "@/hooks/queries/useUser";
 import { PATH } from "@/routes/path";
-import type { EditUserFormData } from "@/schemas/editUser.schema";
-import type { Role } from "@/types/role";
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import { Link } from "react-router";
+import {
+  updateUserSchema,
+  type UpdateUserFormInput,
+  type UpdateUserFormOutput,
+} from "@/schemas/updateUser.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
-interface UserFormProps {
-  onSubmit: React.FormEventHandler<HTMLFormElement>;
-  register: UseFormRegister<EditUserFormData>;
-  errors: FieldErrors<EditUserFormData>;
-  roles: Role[];
-  isSubmitting: boolean;
+interface Props {
+  userId: number;
 }
 
-const UserEditForm = ({
-  onSubmit,
-  register,
-  errors,
-  roles,
-  isSubmitting,
-}: UserFormProps) => {
+const UserEditForm = ({ userId }: Props) => {
+  const navigate = useNavigate();
+  const { data: roles, isLoading: isLoadingRoles } = useRoles();
+  const { data: user, isLoading: isLoadingUser } = useUser(userId);
+
+  const updateUser = useUpdateUser();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors, isDirty },
+  } = useForm<UpdateUserFormInput, unknown, UpdateUserFormOutput>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+      role_id: "",
+    },
+    resolver: zodResolver(updateUserSchema),
+  });
+
+  useEffect(() => {
+    if (!user) return;
+
+    reset({
+      name: user.data.name,
+      email: user.data.email,
+      role_id: String(user.data.role_id),
+      password: "",
+      password_confirmation: "",
+    });
+  }, [user, reset]);
+
+  const onSubmit = (data: UpdateUserFormOutput) => {
+    updateUser.mutate(
+      {
+        userId,
+        data,
+      },
+      {
+        onSuccess: (response) => {
+          toast.success(response.message);
+          navigate(PATH.USERS);
+        },
+        onError: (error) => {
+          if (axios.isAxiosError(error) && error.response?.status === 422) {
+            const validationErrors = error.response.data.errors;
+
+            Object.entries(validationErrors).forEach(([field, messages]) => {
+              setError(field as keyof UpdateUserFormInput, {
+                type: "server",
+                message: (messages as string[])[0],
+              });
+            });
+
+            return;
+          }
+
+          toast.error("Terjadi kesalahan.");
+        },
+      },
+    );
+  };
+
+  if (isLoadingUser || !user) {
+    return <FormSkeleton />;
+  }
+
   return (
     <>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-6">
           <div>
             <Label htmlFor="name">Nama</Label>
@@ -77,15 +150,15 @@ const UserEditForm = ({
           <div>
             <Label htmlFor="role_id">Role</Label>
             <Select
-              placeholder="-- Pilih Role --"
+              placeholder={
+                isLoadingRoles ? "-- Memuat Role --" : "-- Pilih Role --"
+              }
               className="dark:bg-dark-900"
-              {...register("role_id", {
-                valueAsNumber: true,
-              })}
+              {...register("role_id")}
               error={!!errors.role_id}
               hint={errors.role_id?.message}
             >
-              {roles.map((role) => (
+              {roles?.data.map((role) => (
                 <option
                   key={role.id}
                   value={role.id}
@@ -98,19 +171,11 @@ const UserEditForm = ({
           </div>
 
           <div className="flex justify-center sm:justify-end gap-4">
-            <Link
-              to={PATH.USERS}
-              className="w-full sm:w-30 text-center rounded-lg bg-error-500 px-4 py-3 text-sm font-medium text-white transition shadow-theme-xs hover:bg-error-600"
-            >
-              Kembali
-            </Link>
-            <button
-              disabled={isSubmitting}
-              type="submit"
-              className="w-full sm:w-30 rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white transition shadow-theme-xs hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-brand-500"
-            >
-              {isSubmitting ? "Loading..." : "Simpan"}
-            </button>
+            <BackButton url={PATH.USERS} />
+            <SubmitButton
+              disabled={!isDirty || updateUser.isPending}
+              text={updateUser.isPending ? "Menyimpan..." : "Simpan"}
+            />
           </div>
         </div>
       </form>

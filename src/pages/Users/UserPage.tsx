@@ -2,79 +2,26 @@ import ComponentCard from "@/components/common/ComponentCard";
 import PageHeader from "@/components/common/PageHeader";
 import TableUser from "@/components/table/users/TableUser";
 import ModalDelete from "@/components/ui/modal/ModalDelete";
-import { useDebounce } from "@/hooks/useDebounce";
+import { useDeleteUser } from "@/hooks/mutations/useDeleteUser";
 import { PATH } from "@/routes/path";
-import { userService } from "@/services/user.service";
-import type { PaginationMeta } from "@/types/api";
 import type { User } from "@/types/user";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const UserPage = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState("");
-
-  const debouncedSearch = useDebounce(search, 300);
-
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
 
-  const fetchUsers = useCallback(async () => {
-    const res = await userService.list(page, limit, debouncedSearch);
+  const deleteUser = useDeleteUser();
 
-    setUsers(res.data);
-    setMeta(res.meta);
-  }, [page, limit, debouncedSearch]);
-
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-
-      try {
-        await fetchUsers();
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    load();
-  }, [fetchUsers]);
-
-  const openDeleteModal = (user: User) => {
-    setSelectedUser(user);
-    setIsDeleteOpen(true);
-  };
-
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!selectedUser) return;
 
-    try {
-      setIsDeleting(true);
-
-      const response = await userService.delete(Number(selectedUser.id));
-
-      toast.success(response.message);
-
-      setIsDeleteOpen(false);
-      setSelectedUser(null);
-
-      if (users.length === 1 && page > 1) {
-        setPage(page - 1);
-      } else {
-        await fetchUsers();
-      }
-    } catch (error) {
-      console.log(error);
-
-      toast.error("Gagal menghapus user");
-    } finally {
-      setIsDeleting(false);
-    }
+    deleteUser.mutate(Number(selectedUser.id), {
+      onSuccess: (response) => {
+        toast.success(response.message);
+        setSelectedUser(null);
+      },
+    });
   };
 
   return (
@@ -88,31 +35,19 @@ const UserPage = () => {
           addUrl={PATH.USERS_CREATE}
           addButton
         >
-          <TableUser
-            users={users}
-            meta={meta}
-            page={page}
-            setPage={setPage}
-            setLimit={setLimit}
-            search={search}
-            setSearch={setSearch}
-            loading={loading}
-            openDeleteModal={openDeleteModal}
-          />
+          <TableUser onDelete={setSelectedUser} />
         </ComponentCard>
       </div>
 
-      {isDeleteOpen && (
-        <ModalDelete
-          open={isDeleteOpen}
-          onClose={() => setIsDeleteOpen(false)}
-          onConfirm={handleDelete}
-          isDeleting={isDeleting}
-        >
-          Apakah Anda yakin ingin menghapus user{" "}
-          <span className="font-semibold">{selectedUser?.name}</span>?
-        </ModalDelete>
-      )}
+      <ModalDelete
+        open={!!selectedUser}
+        onClose={() => setSelectedUser(null)}
+        onConfirm={handleDelete}
+        isDeleting={deleteUser.isPending}
+      >
+        Apakah Anda yakin ingin menghapus user{" "}
+        <span className="font-semibold">{selectedUser?.name}</span>?
+      </ModalDelete>
     </>
   );
 };

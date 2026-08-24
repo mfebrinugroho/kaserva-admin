@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const editUserSchema = z
+export const updateUserSchema = z
   .object({
     name: z
       .string()
@@ -11,6 +11,7 @@ export const editUserSchema = z
       .string()
       .min(1, "Email wajib diisi")
       .email("Format email tidak valid"),
+
     password: z
       .string()
       .min(8, "Password minimal 8 karakter")
@@ -19,7 +20,7 @@ export const editUserSchema = z
 
     password_confirmation: z.string().optional(),
 
-    role_id: z.number().min(1, "Role wajib dipilih"),
+    role_id: z.string().min(1, "Role wajib diisi").pipe(z.coerce.number()),
   })
   .refine(
     (data) => {
@@ -33,4 +34,5 @@ export const editUserSchema = z
     },
   );
 
-export type EditUserFormData = z.infer<typeof editUserSchema>;
+export type UpdateUserFormInput = z.input<typeof updateUserSchema>;
+export type UpdateUserFormOutput = z.output<typeof updateUserSchema>;

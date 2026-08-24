@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createUserSchema = z
+export const userSchema = z
   .object({
     name: z
       .string()
@@ -16,11 +16,12 @@ export const createUserSchema = z
 
     password_confirmation: z.string(),
 
-    role_id: z.number().min(1, "Role wajib dipilih"),
+    role_id: z.string().min(1, "Role wajib diisi").pipe(z.coerce.number()),
   })
   .refine((data) => data.password === data.password_confirmation, {
     message: "Konfirmasi password tidak sesuai",
     path: ["password_confirmation"],
   });
 
-export type CreateUserFormData = z.infer<typeof createUserSchema>;
+export type UserFormInput = z.input<typeof userSchema>;
+export type UserFormOutput = z.output<typeof userSchema>;
