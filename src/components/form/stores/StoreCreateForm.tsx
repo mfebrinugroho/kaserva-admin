@@ -13,7 +13,6 @@ import {
 } from "@/schemas/store.schema";
 import { handleFormError } from "@/utils/handleFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";

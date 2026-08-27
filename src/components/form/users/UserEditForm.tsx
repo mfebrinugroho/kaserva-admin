@@ -15,7 +15,6 @@ import {
 } from "@/schemas/updateUser.schema";
 import { handleFormError } from "@/utils/handleFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";

@@ -151,7 +151,7 @@ const TableMenu = () => {
 
                     <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
-                        {menu.category.name}
+                        {menu.category?.name}
                       </p>
                     </TableCell>
 

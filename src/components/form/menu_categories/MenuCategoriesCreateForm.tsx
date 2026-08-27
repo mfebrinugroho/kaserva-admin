@@ -11,7 +11,6 @@ import {
 } from "@/schemas/menuCategory.schema";
 import { handleFormError } from "@/utils/handleFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 

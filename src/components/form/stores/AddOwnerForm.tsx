@@ -9,7 +9,6 @@ import { storeService } from "@/services/store.service";
 import { handleFormError } from "@/utils/handleFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 

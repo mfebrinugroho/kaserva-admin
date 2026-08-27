@@ -17,7 +17,6 @@ import SubmitButton from "@/components/button/SubmitButton";
 import { useCreateUser } from "@/hooks/mutations/useCreateUser";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import axios from "axios";
 import { handleFormError } from "@/utils/handleFormError";
 
 const UserCreateForm = () => {
