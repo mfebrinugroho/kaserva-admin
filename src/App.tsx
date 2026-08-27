@@ -8,6 +8,7 @@ import RoleRoute from "@/routes/RoleRoute";
 import { PATH } from "@/routes/path";
 import { Toaster } from "sonner";
 import { lazy } from "react";
+import MenuCategoryPage from "./pages/MenuCategories/MenuCategoryPage";
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const AppLayout = lazy(() => import("@/layouts/AppLayout"));
 const Login = lazy(() => import("@/pages/Login"));
@@ -60,6 +61,11 @@ function App() {
                 <Route
                   path={PATH.STORES_EDIT_PATTERN}
                   element={<EditStorePage />}
+                />
+
+                <Route
+                  path={PATH.MENU_CATEGORIES}
+                  element={<MenuCategoryPage />}
                 />
 
                 <Route path={PATH.MENUS} element={<MenuPage />} />

@@ -9,6 +9,8 @@ interface ComponentCardProps {
   addButton?: boolean;
   addUrl?: string;
   addTitle?: string;
+  addModal?: boolean;
+  onClick?: () => void;
 }
 
 const ComponentCard = ({
@@ -19,6 +21,8 @@ const ComponentCard = ({
   addButton = false,
   addUrl = "/",
   addTitle = "Add Product",
+  addModal = false,
+  onClick,
 }: ComponentCardProps) => {
   return (
     <div
@@ -63,6 +67,32 @@ const ComponentCard = ({
               </svg>
               {addTitle}
             </Link>
+          </div>
+        )}
+
+        {addModal && (
+          <div className="flex gap-3">
+            <button
+              onClick={onClick}
+              className="bg-brand-500 shadow-theme-xs hover:bg-brand-600 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white transition"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+              >
+                <path
+                  d="M5 10.0002H15.0006M10.0002 5V15.0006"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {addTitle}
+            </button>
           </div>
         )}
       </div>

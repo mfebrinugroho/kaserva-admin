@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { useSidebar } from "@/contexts/SidebarContext";
 import {
+  ChartBarStacked,
   ChevronDownIcon,
   Ellipsis,
   LayoutDashboard,
@@ -45,6 +46,11 @@ const othersItems: NavItem[] = [
     icon: <Store />,
     name: "Resto/Toko",
     path: PATH.STORES,
+  },
+  {
+    icon: <ChartBarStacked />,
+    name: "Kategori Menu",
+    path: PATH.MENU_CATEGORIES,
   },
   {
     icon: <SquareMenu />,

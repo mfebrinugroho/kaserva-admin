@@ -6,6 +6,7 @@ import {
   type AddOwnerFormOutput,
 } from "@/schemas/addOwner.schema";
 import { storeService } from "@/services/store.service";
+import { handleFormError } from "@/utils/handleFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -54,18 +55,12 @@ const AddOwnerForm = ({ onClose }: Props) => {
       onClose();
     },
     onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 422) {
-        const validationErrors = error.response.data.errors;
+      const isValidationError = handleFormError<AddOwnerFormInput>(
+        error,
+        setError,
+      );
 
-        Object.entries(validationErrors).forEach(([field, messages]) => {
-          setError(field as keyof AddOwnerFormInput, {
-            type: "server",
-            message: (messages as string[])[0],
-          });
-        });
-
-        return;
-      }
+      if (isValidationError) return;
 
       toast.error("Terjadi kesalahan.");
     },

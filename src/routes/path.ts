@@ -12,6 +12,8 @@ export const PATH = {
   STORES_EDIT_PATTERN: "/stores/:id/edit",
   STORES_EDIT: (id: number | string) => `/stores/${id}/edit`,
 
+  MENU_CATEGORIES: "/menu_categories",
+
   MENUS: "/menus",
   MENUS_CREATE: "/menus/create",
   // MENUS_EDIT_PATTERN: "/menus/:id/edit",

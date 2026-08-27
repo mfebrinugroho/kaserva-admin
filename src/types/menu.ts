@@ -12,5 +12,5 @@ export interface Menu {
   is_available: true;
   created_at: string;
   updated_at: string;
-  category: MenuCategory;
+  category?: MenuCategory;
 }

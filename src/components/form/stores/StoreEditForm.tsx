@@ -12,6 +12,7 @@ import {
   updateStoreSchema,
   type UpdateStoreFormData,
 } from "@/schemas/updateStore.schema";
+import { handleFormError } from "@/utils/handleFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useEffect } from "react";
@@ -73,18 +74,12 @@ const StoreEditForm = ({ storeId }: Props) => {
           navigate(PATH.STORES);
         },
         onError: (error) => {
-          if (axios.isAxiosError(error) && error.response?.status === 422) {
-            const validationErrors = error.response.data.errors;
+          const isValidationError = handleFormError<UpdateStoreFormData>(
+            error,
+            setError,
+          );
 
-            Object.entries(validationErrors).forEach(([field, messages]) => {
-              setError(field as keyof UpdateStoreFormData, {
-                type: "server",
-                message: (messages as string[])[0],
-              });
-            });
-
-            return;
-          }
+          if (isValidationError) return;
 
           toast.error("Terjadi kesalahan.");
         },

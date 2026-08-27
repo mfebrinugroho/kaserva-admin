@@ -1,3 +1,6 @@
+import type { Menu } from "./menu";
+import type { Store } from "./store";
+
 export interface MenuCategory {
   id: number;
   store_id: number;
@@ -6,4 +9,6 @@ export interface MenuCategory {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  store?: Store;
+  menus?: Menu;
 }

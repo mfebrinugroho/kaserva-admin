@@ -7,39 +7,29 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import InputSearch from "@/components/ui/table/InputSearch";
+import Pagination from "@/components/ui/table/Pagination";
 import PerPage from "@/components/ui/table/PerPage";
-import { useAuth } from "@/contexts/AuthContext";
+import { useMenus } from "@/hooks/queries/useMenus";
 import { useDebounce } from "@/hooks/useDebounce";
 import { cn } from "@/libs/utils";
-import { menuService } from "@/services/menus.service";
 import { getRowNumber } from "@/utils/rowNumber";
-import { useQuery } from "@tanstack/react-query";
 import { ChevronsUpDown, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 
 const TableMenu = () => {
-  const { user } = useAuth();
-
-  // const queryClient = useQueryClient();
-
-  // const [page, setPage] = useState(1);
-  const page = 1;
+  const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
 
-  const queryKey = ["menus", user?.id, page, limit, debouncedSearch];
-
-  const { data, isLoading } = useQuery({
-    queryKey,
-    queryFn: async () => await menuService.list(page, limit, debouncedSearch),
-    enabled: !!user,
+  const { data, isLoading } = useMenus({
+    page,
+    limit,
+    search: debouncedSearch,
   });
 
   const menus = data?.data || [];
   const meta = data?.meta;
-
-  // const isSuperAdmin = user?.role.slug === "super-admin";
 
   const superAdminColumns = [
     { key: "no", label: "No", sortable: false, className: "w-16" },
@@ -66,33 +56,7 @@ const TableMenu = () => {
     { key: "action", label: "Aksi", sortable: false, className: "w-32" },
   ];
 
-  // const ownerColumns = [
-  //   { key: "no", label: "No", sortable: false, className: "w-16" },
-  //   { key: "name", label: "Nama", sortable: true, className: "min-w-64" },
-  //   { key: "category", label: "Kategori", sortable: true, className: "w-44" },
-  //   {
-  //     key: "description",
-  //     label: "Deskripsi",
-  //     sortable: true,
-  //     className: "min-w-64",
-  //   },
-  //   {
-  //     key: "price",
-  //     label: "Harga",
-  //     sortable: true,
-  //     className: "w-44",
-  //   },
-  //   {
-  //     key: "available",
-  //     label: "Ketersediaan",
-  //     sortable: true,
-  //     className: "w-44",
-  //   },
-  //   { key: "action", label: "Aksi", sortable: false, className: "w-32" },
-  // ];
-
   const columns = superAdminColumns;
-  // const columns = isSuperAdmin ? superAdminColumns : ownerColumns;
 
   return (
     <>
@@ -103,28 +67,24 @@ const TableMenu = () => {
             options={[10, 25, 50]}
           />
 
-          <div className="flex flex-col sm:flex-row sm:justify-center gap-2">
-            <InputSearch
-              placeholder="Cari resto/toko..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onClear={() => setSearch("")}
-            />
-          </div>
+          <InputSearch
+            value={search}
+            placeholder="Cari menu..."
+            onChange={(e) => setSearch(e.target.value)}
+            onClear={() => setSearch("")}
+          />
         </div>
 
         <div className="max-w-full overflow-x-auto">
           <Table>
-            <TableHeader className="border-b border-gray-200 dark:border-gray-800 ">
-              <TableRow className="border-t border-gray-200 dark:border-gray-800">
+            <TableHeader>
+              <TableRow>
                 {columns.map((column) => (
                   <TableCell
                     key={column.key}
                     isHeader
-                    className={cn(
-                      "border-r border-gray-200 px-4 py-3 dark:border-gray-800",
-                      column.className,
-                    )}
+                    className={column.className}
+                    variant="header"
                   >
                     <div
                       className={cn(
@@ -149,13 +109,10 @@ const TableMenu = () => {
               </TableRow>
             </TableHeader>
 
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/5">
-              {isLoading ? (
-                <TableRow className=" border-t border-gray-100 dark:border-gray-800">
-                  <TableCell
-                    colSpan={columns.length}
-                    className="border border-gray-100 px-4 py-[17.5px] dark:border-gray-800"
-                  >
+            <TableBody>
+              {isLoading && (
+                <TableRow>
+                  <TableCell colSpan={columns.length}>
                     <div className="flex justify-center items-center">
                       <LoaderCircle
                         size={24}
@@ -164,12 +121,11 @@ const TableMenu = () => {
                     </div>
                   </TableCell>
                 </TableRow>
-              ) : menus.length === 0 ? (
-                <TableRow className=" border-t border-gray-100 dark:border-gray-800">
-                  <TableCell
-                    colSpan={columns.length}
-                    className="border border-gray-100 px-4 py-[17.5px] dark:border-gray-800 text-center"
-                  >
+              )}
+
+              {menus.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length}>
                     <p className="text-theme-sm text-gray-700 dark:text-gray-400 font-semibold">
                       Data menu tidak ditemukan.
                     </p>
@@ -177,11 +133,8 @@ const TableMenu = () => {
                 </TableRow>
               ) : (
                 menus.map((menu, index) => (
-                  <TableRow
-                    key={menu.id}
-                    className="border-t border-gray-100 dark:border-gray-800"
-                  >
-                    <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                  <TableRow key={menu.id}>
+                    <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
                         {getRowNumber(
                           meta?.current_page ?? 1,
@@ -190,25 +143,25 @@ const TableMenu = () => {
                         )}
                       </p>
                     </TableCell>
-                    <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                    <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
                         {menu.name}
                       </p>
                     </TableCell>
 
-                    <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                    <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
                         {menu.category.name}
                       </p>
                     </TableCell>
 
-                    <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                    <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
                         {menu.description}
                       </p>
                     </TableCell>
 
-                    <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                    <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
                         {new Intl.NumberFormat("id-ID", {
                           style: "currency",
@@ -217,7 +170,7 @@ const TableMenu = () => {
                       </p>
                     </TableCell>
 
-                    <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                    <TableCell>
                       <div className="text-theme-sm text-gray-700 dark:text-gray-400">
                         <Switch
                           activeLabel="Aktif"
@@ -233,7 +186,7 @@ const TableMenu = () => {
                       </div>
                     </TableCell>
 
-                    <TableCell className="border-r border-gray-100 px-4 py-[17.5px] dark:border-gray-800">
+                    <TableCell>
                       <div className="flex w-full items-center gap-2">
                         {/* {hasPermission("store.delete") && (
                           <button
@@ -258,6 +211,15 @@ const TableMenu = () => {
             </TableBody>
           </Table>
         </div>
+        {meta && (
+          <Pagination
+            page={page}
+            lastPage={meta.last_page}
+            total={meta.total}
+            perPage={meta.per_page}
+            onPageChange={setPage}
+          />
+        )}
       </div>
     </>
   );

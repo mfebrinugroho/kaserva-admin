@@ -18,6 +18,7 @@ import { useCreateUser } from "@/hooks/mutations/useCreateUser";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { handleFormError } from "@/utils/handleFormError";
 
 const UserCreateForm = () => {
   const navigate = useNavigate();
@@ -49,18 +50,12 @@ const UserCreateForm = () => {
       },
 
       onError: (error) => {
-        if (axios.isAxiosError(error) && error.response?.status === 422) {
-          const validationErrors = error.response.data.errors;
+        const isValidationError = handleFormError<UserFormInput>(
+          error,
+          setError,
+        );
 
-          Object.entries(validationErrors).forEach(([field, messages]) => {
-            setError(field as keyof UserFormInput, {
-              type: "server",
-              message: (messages as string[])[0],
-            });
-          });
-
-          return;
-        }
+        if (isValidationError) return;
 
         toast.error("Terjadi kesalahan.");
       },

@@ -1,6 +1,6 @@
 import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
 import api from "../libs/axios";
-import type { Store } from "@/types/store";
+import type { Store, StoreOption } from "@/types/store";
 import type { StoreFormOutput } from "@/schemas/store.schema";
 import type { UpdateStoreFormData } from "@/schemas/updateStore.schema";
 import type { User } from "@/types/user";
@@ -150,6 +150,13 @@ export const storeService = {
     const response = await api.get<ApiResponse<Store[]>>(
       `/stores-owners/available-stores`,
     );
+
+    return response.data;
+  },
+
+  options: async (): Promise<ApiResponse<StoreOption[]>> => {
+    const response =
+      await api.get<ApiResponse<StoreOption[]>>(`/stores/options`);
 
     return response.data;
   },

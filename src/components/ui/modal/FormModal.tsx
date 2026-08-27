@@ -18,7 +18,7 @@ const FormModal = ({
   return (
     <>
       <div
-        onClick={onClose}
+        // onClick={onClose}
         className="fixed inset-0 z-111111 flex items-center justify-center bg-black/50 backdrop-blur-sm"
       >
         {/* <div className="modal-close-btn fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"></div> */}

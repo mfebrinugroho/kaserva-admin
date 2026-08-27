@@ -26,3 +26,8 @@ export interface StoreAuth {
   name: string;
   image_url: string;
 }
+
+export interface StoreOption {
+  id: number;
+  name: string;
+}
