@@ -5,13 +5,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  ChevronsUpDown,
-  LoaderCircle,
-  Pencil,
-  Trash2,
-  UserPlus,
-} from "lucide-react";
+import { ChevronsUpDown, Pencil, Trash2, UserPlus } from "lucide-react";
 import { Link } from "react-router";
 import InputSearch from "@/components/ui/table/InputSearch";
 import PerPage from "@/components/ui/table/PerPage";

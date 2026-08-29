@@ -2,13 +2,17 @@ import { z } from "zod";
 
 export const menuSchema = z.object({
   // store_id: z.string().min(1, "Toko wajib diisi").pipe(z.coerce.number()),
-  store_id: z.coerce.number().min(1, "Toko wajib diisi"),
 
   // menu_category_id: z
   //   .string()
   //   .min(1, "Kategori menu wajib diisi")
   //   .pipe(z.coerce.number()),
-  menu_category_id: z.coerce.number().min(1, "Kategori menu wajib diisi"),
+
+  store_id: z.coerce.number<string | number>().min(1, "Toko wajib diisi"),
+
+  menu_category_id: z.coerce
+    .number<string | number>()
+    .min(1, "Kategori menu wajib diisi"),
 
   name: z
     .string()

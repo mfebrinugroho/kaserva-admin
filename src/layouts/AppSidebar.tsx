@@ -6,7 +6,6 @@ import {
   ChevronDownIcon,
   Ellipsis,
   LayoutDashboard,
-  Pizza,
   SquareMenu,
   Store,
   Users,

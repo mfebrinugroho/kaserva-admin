@@ -1,7 +1,5 @@
 import { menuCategoriesService } from "@/services/menuCategories.service";
-import { menuService } from "@/services/menus.service";
 import type { ApiPaginatedResponse } from "@/types/api";
-import type { Menu } from "@/types/menu";
 import type { MenuCategory } from "@/types/menuCategory";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

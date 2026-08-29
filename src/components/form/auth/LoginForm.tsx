@@ -43,8 +43,6 @@ export default function LoginForm() {
       setLoading(true);
       const response = await login(form);
 
-      console.log(response);
-
       localStorage.setItem("token", response.token);
       setToken(response.token);
       navigate("/");
