@@ -55,7 +55,7 @@ export default function SelectSearch({
   }
 
   return (
-    <div className="relative z-9">
+    <div className="relative ">
       {/* Input */}
       <input
         className={inputClasses}
@@ -67,7 +67,7 @@ export default function SelectSearch({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute mt-[0.5px] w-full rounded-xl border border-gray-200 bg-white shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark">
+        <div className="z-99 absolute mt-2 w-full rounded-xl border border-gray-200 bg-white shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark">
           <input
             className="w-full border-b px-3 py-2 outline-none dark:placeholder:text-gray-700 dark:border-gray-500 text-gray-500"
             placeholder="Cari..."

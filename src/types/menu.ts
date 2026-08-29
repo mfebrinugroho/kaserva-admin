@@ -1,4 +1,5 @@
 import type { MenuCategory } from "./menuCategory";
+import type { Store } from "./store";
 
 export interface Menu {
   id: number;
@@ -13,4 +14,5 @@ export interface Menu {
   created_at: string;
   updated_at: string;
   category?: MenuCategory;
+  store?: Store;
 }

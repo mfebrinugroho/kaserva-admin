@@ -9,17 +9,28 @@ import {
 import InputSearch from "@/components/ui/table/InputSearch";
 import Pagination from "@/components/ui/table/Pagination";
 import PerPage from "@/components/ui/table/PerPage";
+import TableStateRow from "@/components/ui/table/TableStateRow";
+import { useUpdateMenuStatus } from "@/hooks/mutations/useUpdateMenuStatus";
 import { useMenus } from "@/hooks/queries/useMenus";
 import { useDebounce } from "@/hooks/useDebounce";
 import { cn } from "@/libs/utils";
+import { PATH } from "@/routes/path";
+import type { Menu } from "@/types/menu";
 import { getRowNumber } from "@/utils/rowNumber";
-import { ChevronsUpDown, LoaderCircle } from "lucide-react";
+import { ChevronsUpDown, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
+import { toast } from "sonner";
 
-const TableMenu = () => {
+type Props = {
+  onDelete: (menu: Menu) => void;
+};
+
+const TableMenu = ({ onDelete }: Props) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
+
   const debouncedSearch = useDebounce(search, 300);
 
   const { data, isLoading } = useMenus({
@@ -31,10 +42,41 @@ const TableMenu = () => {
   const menus = data?.data || [];
   const meta = data?.meta;
 
+  const updateMenuStatus = useUpdateMenuStatus({
+    page,
+    limit,
+    search: debouncedSearch,
+  });
+
+  const handleUpdateStatus = (menu: Menu) => {
+    updateMenuStatus.mutate(
+      {
+        id: menu.id,
+        is_available: !menu.is_available,
+      },
+      {
+        onSuccess: (response) => {
+          toast.success(response.message);
+        },
+      },
+    );
+  };
+
   const superAdminColumns = [
     { key: "no", label: "No", sortable: false, className: "w-16" },
-    { key: "name", label: "Nama", sortable: true, className: "min-w-64" },
-    { key: "category", label: "Kategori", sortable: true, className: "w-44" },
+    {
+      key: "store_id",
+      label: "Resto/Toko",
+      sortable: true,
+      className: "min-w-44",
+    },
+    {
+      key: "menu_category_id",
+      label: "Kategori",
+      sortable: true,
+      className: "w-44",
+    },
+    { key: "name", label: "Nama Menu", sortable: true, className: "min-w-64" },
     {
       key: "description",
       label: "Deskripsi",
@@ -48,7 +90,7 @@ const TableMenu = () => {
       className: "w-44",
     },
     {
-      key: "available",
+      key: "is_available",
       label: "Ketersediaan",
       sortable: true,
       className: "w-44",
@@ -78,7 +120,7 @@ const TableMenu = () => {
         <div className="max-w-full overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow variant="header">
                 {columns.map((column) => (
                   <TableCell
                     key={column.key}
@@ -110,27 +152,14 @@ const TableMenu = () => {
             </TableHeader>
 
             <TableBody>
-              {isLoading && (
-                <TableRow>
-                  <TableCell colSpan={columns.length}>
-                    <div className="flex justify-center items-center">
-                      <LoaderCircle
-                        size={24}
-                        className="animate-spin [animation-duration:1.2s] text-theme-sm text-gray-700 dark:text-gray-400"
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-
-              {menus.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={columns.length}>
-                    <p className="text-theme-sm text-gray-700 dark:text-gray-400 font-semibold">
-                      Data menu tidak ditemukan.
-                    </p>
-                  </TableCell>
-                </TableRow>
+              {isLoading ? (
+                <TableStateRow type="loading" colSpan={columns.length} />
+              ) : menus.length === 0 ? (
+                <TableStateRow
+                  type="empty"
+                  colSpan={columns.length}
+                  message="Data menu tidak ditemukan."
+                />
               ) : (
                 menus.map((menu, index) => (
                   <TableRow key={menu.id}>
@@ -143,15 +172,22 @@ const TableMenu = () => {
                         )}
                       </p>
                     </TableCell>
+
                     <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
-                        {menu.name}
+                        {menu.store?.name}
                       </p>
                     </TableCell>
 
                     <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
                         {menu.category?.name}
+                      </p>
+                    </TableCell>
+
+                    <TableCell>
+                      <p className="text-theme-sm text-gray-700 dark:text-gray-400">
+                        {menu.name}
                       </p>
                     </TableCell>
 
@@ -173,36 +209,29 @@ const TableMenu = () => {
                     <TableCell>
                       <div className="text-theme-sm text-gray-700 dark:text-gray-400">
                         <Switch
-                          activeLabel="Aktif"
-                          inactiveLabel="Tidak Aktif"
+                          activeLabel="Tersedia"
+                          inactiveLabel="Tidak Tersedia"
                           checked={menu.is_available}
-                          // onChange={(value) =>
-                          //   updateStoreStatus.mutate({
-                          //     id: store.id,
-                          //     is_active: value,
-                          //   })
-                          // }
+                          onChange={() => handleUpdateStatus(menu)}
                         />
                       </div>
                     </TableCell>
 
                     <TableCell>
                       <div className="flex w-full items-center gap-2">
-                        {/* {hasPermission("store.delete") && (
-                          <button
-                            className="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500"
-                            onClick={() => openDeleteModal(store)}
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        )} */}
+                        <button
+                          className="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500"
+                          onClick={() => onDelete(menu)}
+                        >
+                          <Trash2 size={18} />
+                        </button>
 
-                        {/* <Link
-                          to={PATH.STORES_EDIT(store.id)}
+                        <Link
+                          to={PATH.MENUS_EDIT(menu.id)}
                           className="text-gray-500 hover:text-warning-500 dark:text-gray-400 dark:hover:text-warning-500"
                         >
                           <Pencil size={18} />
-                        </Link> */}
+                        </Link>
                       </div>
                     </TableCell>
                   </TableRow>

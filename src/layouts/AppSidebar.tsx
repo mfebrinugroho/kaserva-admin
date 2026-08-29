@@ -276,30 +276,24 @@ const AppSidebar: React.FC = () => {
         >
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              {/* <img
+              <img
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                src="/images/kaserva/kaserva-logo-primary.png"
                 alt="Logo"
                 width={150}
                 height={40}
               />
               <img
                 className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                src="/images/kaserva/kaserva-logo-reversed-white.png"
                 alt="Logo"
                 width={150}
                 height={40}
-              /> */}
-              <span className="grid place-items-center h-9 w-9 rounded-xl bg-primary-500 text-white shadow-sm shadow-gold-500/30 transition-transform group-hover:-rotate-6">
-                <Pizza size={24} strokeWidth={2.4} />
-              </span>
-              <span className="font-display text-lg font-semibold tracking-tight text-ink-900 dark:text-white">
-                OrderKuy
-              </span>
+              />
             </>
           ) : (
             <img
-              src="/images/logo/logo-icon.svg"
+              src="/images/kaserva/kaserva-mark.png"
               alt="Logo"
               width={32}
               height={32}

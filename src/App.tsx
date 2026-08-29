@@ -9,6 +9,7 @@ import { PATH } from "@/routes/path";
 import { Toaster } from "sonner";
 import { lazy } from "react";
 import MenuCategoryPage from "./pages/MenuCategories/MenuCategoryPage";
+import EditMenuPage from "./pages/Menus/EditMenuPage";
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const AppLayout = lazy(() => import("@/layouts/AppLayout"));
 const Login = lazy(() => import("@/pages/Login"));
@@ -70,6 +71,10 @@ function App() {
 
                 <Route path={PATH.MENUS} element={<MenuPage />} />
                 <Route path={PATH.MENUS_CREATE} element={<CreateMenuPage />} />
+                <Route
+                  path={PATH.MENUS_EDIT_PATTERN}
+                  element={<EditMenuPage />}
+                />
               </Route>
               {/* End Super Admin */}
 

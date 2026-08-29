@@ -29,6 +29,7 @@ import { useStores } from "@/hooks/queries/useStores";
 import Switch from "@/components/ui/input/Switch";
 import { useUpdateStoreStatus } from "@/hooks/mutations/useUpdateStoreStatus";
 import { toast } from "sonner";
+import TableStateRow from "@/components/ui/table/TableStateRow";
 
 type Props = {
   onDelete: (store: Store) => void;
@@ -127,7 +128,6 @@ const TableStore = ({ onDelete, onAddOwner }: Props) => {
         {/* Table */}
         <div className="max-w-full overflow-x-auto">
           <Table>
-            {/* Table Header */}
             <TableHeader>
               <TableRow variant="header">
                 {columns.map((column) => (
@@ -162,24 +162,13 @@ const TableStore = ({ onDelete, onAddOwner }: Props) => {
             {/* Table Body */}
             <TableBody>
               {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={columns.length}>
-                    <div className="flex justify-center items-center">
-                      <LoaderCircle
-                        size={24}
-                        className="animate-spin [animation-duration:1.2s] text-theme-sm text-gray-700 dark:text-gray-400"
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
+                <TableStateRow type="loading" colSpan={columns.length} />
               ) : stores.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={columns.length}>
-                    <p className="text-theme-sm text-gray-700 dark:text-gray-400 font-semibold">
-                      Data resto/toko tidak ditemukan.
-                    </p>
-                  </TableCell>
-                </TableRow>
+                <TableStateRow
+                  type="empty"
+                  colSpan={columns.length}
+                  message="Data resto/toko tidak ditemukan."
+                />
               ) : (
                 stores.map((store, index) => (
                   <TableRow key={store.id}>

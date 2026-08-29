@@ -9,13 +9,16 @@ import {
 import InputSearch from "@/components/ui/table/InputSearch";
 import Pagination from "@/components/ui/table/Pagination";
 import PerPage from "@/components/ui/table/PerPage";
+import TableStateRow from "@/components/ui/table/TableStateRow";
+import { useUpdateMenuCategoryStatus } from "@/hooks/mutations/useUpdateMenuCategoryStatus";
 import { useMenuCategories } from "@/hooks/queries/useMenuCategories";
 import { useDebounce } from "@/hooks/useDebounce";
 import { cn } from "@/libs/utils";
 import type { MenuCategory } from "@/types/menuCategory";
 import { getRowNumber } from "@/utils/rowNumber";
-import { ChevronsUpDown, LoaderCircle, Pencil, Trash2 } from "lucide-react";
+import { ChevronsUpDown, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type Props = {
   onDelete: (menuCategory: MenuCategory) => void;
@@ -37,6 +40,26 @@ const TableMenuCategories = ({ onDelete, onEdit }: Props) => {
 
   const menuCategories = data?.data || [];
   const meta = data?.meta;
+
+  const updateMenuCategoryStatus = useUpdateMenuCategoryStatus({
+    page,
+    limit,
+    search: debouncedSearch,
+  });
+
+  const handleUpdateStatus = (category: MenuCategory) => {
+    updateMenuCategoryStatus.mutate(
+      {
+        id: category.id,
+        is_active: !category.is_active,
+      },
+      {
+        onSuccess: (response) => {
+          toast.success(response.message);
+        },
+      },
+    );
+  };
 
   const headerColumns = [
     { key: "no", label: "No", sortable: true, className: "w-24" },
@@ -99,27 +122,14 @@ const TableMenuCategories = ({ onDelete, onEdit }: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isLoading && (
-              <TableRow>
-                <TableCell colSpan={headerColumns.length}>
-                  <div className="flex justify-center items-center">
-                    <LoaderCircle
-                      size={24}
-                      className="animate-spin [animation-duration:1.2s] text-theme-sm text-gray-700 dark:text-gray-400"
-                    />
-                  </div>
-                </TableCell>
-              </TableRow>
-            )}
-
-            {menuCategories.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={headerColumns.length}>
-                  <p className="text-theme-sm text-gray-700 dark:text-gray-400 font-semibold">
-                    Data kategori tidak ditemukan.
-                  </p>
-                </TableCell>
-              </TableRow>
+            {isLoading ? (
+              <TableStateRow type="loading" colSpan={headerColumns.length} />
+            ) : menuCategories.length === 0 ? (
+              <TableStateRow
+                type="empty"
+                colSpan={headerColumns.length}
+                message="Data kategori tidak ditemukan."
+              />
             ) : (
               menuCategories.map((category, index) => (
                 <TableRow key={category.id}>
@@ -153,7 +163,7 @@ const TableMenuCategories = ({ onDelete, onEdit }: Props) => {
                         activeLabel="Aktif"
                         inactiveLabel="Tidak Aktif"
                         checked={category.is_active}
-                        onChange={() => {}}
+                        onChange={() => handleUpdateStatus(category)}
                       />
                     </div>
                   </TableCell>

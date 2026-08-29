@@ -12,3 +12,9 @@ export interface MenuCategory {
   store?: Store;
   menus?: Menu;
 }
+
+export interface MenuCategoryOption {
+  id: number;
+  store_id: number;
+  name: string;
+}

@@ -16,8 +16,8 @@ export const PATH = {
 
   MENUS: "/menus",
   MENUS_CREATE: "/menus/create",
-  // MENUS_EDIT_PATTERN: "/menus/:id/edit",
-  // MENUS_EDIT: (id: number | string) => `/menus/${id}/edit`,
+  MENUS_EDIT_PATTERN: "/menus/:id/edit",
+  MENUS_EDIT: (id: number | string) => `/menus/${id}/edit`,
 
   FORBIDDEN: "/403",
 };

@@ -1,7 +1,7 @@
 import api from "@/libs/axios";
 import type { MenuCategoryFormOutput } from "@/schemas/menuCategory.schema";
 import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
-import type { MenuCategory } from "@/types/menuCategory";
+import type { MenuCategory, MenuCategoryOption } from "@/types/menuCategory";
 
 interface MenuCategoriesQueryParams {
   page?: number;
@@ -48,8 +48,38 @@ export const menuCategoriesService = {
     return response.data;
   },
 
+  updateStatus: async ({
+    id,
+    is_active,
+  }: {
+    id: number;
+    is_active: boolean;
+  }): Promise<ApiResponse<MenuCategory>> => {
+    const response = await api.patch<ApiResponse<MenuCategory>>(
+      `/menu-categories/${id}/status`,
+      {
+        is_active,
+      },
+    );
+
+    return response.data;
+  },
+
   delete: async (id: number) => {
     const response = await api.delete(`/menu-categories/${id}`);
+
+    return response.data;
+  },
+
+  options: async (storeId?: number) => {
+    const response = await api.get<ApiResponse<MenuCategoryOption[]>>(
+      "/menu-categories/options",
+      {
+        params: {
+          store_id: storeId,
+        },
+      },
+    );
 
     return response.data;
   },
