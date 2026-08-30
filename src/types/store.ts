@@ -31,3 +31,16 @@ export interface StoreOption {
   id: number;
   name: string;
 }
+
+export interface StoreOperatingHour {
+  id: number;
+  store_id: number;
+  day_of_week: number;
+  day_name: string;
+  open_time: string;
+  close_time: string;
+  is_open: boolean;
+  created_at: string;
+  updated_at: string;
+  store?: Store;
+}

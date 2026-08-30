@@ -10,6 +10,9 @@ import { Toaster } from "sonner";
 import { lazy } from "react";
 import MenuCategoryPage from "./pages/MenuCategories/MenuCategoryPage";
 import EditMenuPage from "./pages/Menus/EditMenuPage";
+const EditStoreOperatingHoursPage = lazy(
+  () => import("@//pages/Stores/EditStoreOperatingHoursPage"),
+);
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const AppLayout = lazy(() => import("@/layouts/AppLayout"));
 const Login = lazy(() => import("@/pages/Login"));
@@ -62,6 +65,10 @@ function App() {
                 <Route
                   path={PATH.STORES_EDIT_PATTERN}
                   element={<EditStorePage />}
+                />
+                <Route
+                  path={PATH.STORES_OPERATING_HOURS_EDIT_PATTERN}
+                  element={<EditStoreOperatingHoursPage />}
                 />
 
                 <Route

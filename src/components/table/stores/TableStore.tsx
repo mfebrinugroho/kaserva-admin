@@ -5,7 +5,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronsUpDown, Pencil, Trash2, UserPlus } from "lucide-react";
+import {
+  CalendarClock,
+  ChevronsUpDown,
+  Pencil,
+  Trash2,
+  UserPlus,
+} from "lucide-react";
 import { Link } from "react-router";
 import InputSearch from "@/components/ui/table/InputSearch";
 import PerPage from "@/components/ui/table/PerPage";
@@ -243,6 +249,13 @@ const TableStore = ({ onDelete, onAddOwner }: Props) => {
                           className="text-gray-500 hover:text-warning-500 dark:text-gray-400 dark:hover:text-warning-500"
                         >
                           <Pencil size={18} />
+                        </Link>
+
+                        <Link
+                          to={PATH.STORES_OPERATING_HOURS_EDIT(store.id)}
+                          className="text-gray-500 hover:text-green-500 dark:text-gray-400 dark:hover:text-green-500"
+                        >
+                          <CalendarClock size={18} />
                         </Link>
                       </div>
                     </TableCell>

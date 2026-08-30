@@ -10,7 +10,10 @@ export const PATH = {
   STORES: "/stores",
   STORES_CREATE: "/stores/create",
   STORES_EDIT_PATTERN: "/stores/:id/edit",
+  STORES_OPERATING_HOURS_EDIT_PATTERN: "/stores/:id/operating-hours",
   STORES_EDIT: (id: number | string) => `/stores/${id}/edit`,
+  STORES_OPERATING_HOURS_EDIT: (id: number | string) =>
+    `/stores/${id}/operating-hours`,
 
   MENU_CATEGORIES: "/menu_categories",
 

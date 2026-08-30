@@ -1,6 +1,6 @@
 import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
 import api from "../libs/axios";
-import type { Store, StoreOption } from "@/types/store";
+import type { Store, StoreOperatingHour, StoreOption } from "@/types/store";
 import type { StoreFormOutput } from "@/schemas/store.schema";
 import type { UpdateStoreFormData } from "@/schemas/updateStore.schema";
 import type { User } from "@/types/user";
@@ -10,6 +10,15 @@ interface StoreQueryParams {
   page?: number;
   limit?: number;
   search?: string;
+}
+
+interface UpdateStoreOperatingHoursPayload {
+  operating_hours: {
+    day_of_week: number;
+    is_open: boolean;
+    open_time: string | null;
+    close_time: string | null;
+  }[];
 }
 
 export const storeService = {
@@ -157,6 +166,33 @@ export const storeService = {
   options: async (): Promise<ApiResponse<StoreOption[]>> => {
     const response =
       await api.get<ApiResponse<StoreOption[]>>(`/stores/options`);
+
+    return response.data;
+  },
+
+  operatingHours: async ({
+    storeId,
+  }: {
+    storeId: number;
+  }): Promise<ApiResponse<StoreOperatingHour[]>> => {
+    const response = await api.get<ApiResponse<StoreOperatingHour[]>>(
+      `/stores/${storeId}/operating-hours`,
+    );
+
+    return response.data;
+  },
+
+  updateOperatingHours: async ({
+    id,
+    data,
+  }: {
+    id: number;
+    data: UpdateStoreOperatingHoursPayload;
+  }): Promise<ApiResponse<StoreOperatingHour[]>> => {
+    const response = await api.put<ApiResponse<StoreOperatingHour[]>>(
+      `/stores/${id}/operating-hours`,
+      data,
+    );
 
     return response.data;
   },
