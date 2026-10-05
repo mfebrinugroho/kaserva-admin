@@ -1,4 +1,6 @@
+import LoadingScreen from "@/components/ui/loading/LoadingScreen";
 import { Navigate, Outlet } from "react-router";
+
 import { useAuth } from "@/contexts/AuthContext";
 
 type RoleRouteProps = {
@@ -6,7 +8,11 @@ type RoleRouteProps = {
 };
 
 export default function RoleRoute({ roles }: RoleRouteProps) {
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
+
+  if (authLoading) {
+    return <LoadingScreen />;
+  }
 
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -18,22 +24,3 @@ export default function RoleRoute({ roles }: RoleRouteProps) {
 
   return <Outlet />;
 }
-
-// type Props = {
-//   roles: string[];
-//   children: React.ReactNode;
-// };
-
-// export default function RoleRoute({ roles, children }: Props) {
-//   const { user } = useAuth();
-
-//   if (!user) {
-//     return <Navigate to="/login" replace />;
-//   }
-
-//   if (!roles.includes(user.role.slug)) {
-//     return <Navigate to="/403" replace />;
-//   }
-
-//   return <>{children}</>;
-// }

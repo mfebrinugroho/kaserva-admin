@@ -1,4 +1,4 @@
-import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import { ScrollToTop } from "@/components/common/ScrollToTop";
 import { useAuth } from "@/contexts/AuthContext";
 import LoadingScreen from "@/components/ui/loading/LoadingScreen";
@@ -38,74 +38,69 @@ function App() {
     <>
       <Toaster position="top-right" richColors closeButton />
 
-      <Router>
-        <ScrollToTop />
-        <Routes>
-          {/* User Login */}
-          <Route element={<ProtectedRoute />}>
-            <Route path={PATH.FORBIDDEN} element={<Forbidden />} />
+      <ScrollToTop />
+      <Routes>
+        {/* Guest */}
+        <Route element={<GuestRoute />}>
+          <Route
+            path={PATH.LOGIN}
+            element={user ? <Navigate to="/" replace /> : <Login />}
+          />
+        </Route>
 
-            <Route element={<AppLayout />}>
-              <Route index path={PATH.DASHBOARD} element={<Dashboard />} />
+        {/* User Login */}
+        <Route element={<ProtectedRoute />}>
+          <Route path={PATH.FORBIDDEN} element={<Forbidden />} />
 
-              {/* Super Admin */}
-              <Route element={<RoleRoute roles={["super-admin"]} />}>
-                <Route path={PATH.USERS} element={<UserPage />} />
-                <Route path={PATH.USERS_CREATE} element={<CreateUserPage />} />
-                <Route
-                  path={PATH.USERS_EDIT_PATTERN}
-                  element={<EditUserPage />}
-                />
+          <Route element={<AppLayout />}>
+            <Route index path={PATH.DASHBOARD} element={<Dashboard />} />
 
-                <Route path={PATH.STORES} element={<StorePage />} />
-                <Route
-                  path={PATH.STORES_CREATE}
-                  element={<CreateStorePage />}
-                />
-                <Route
-                  path={PATH.STORES_EDIT_PATTERN}
-                  element={<EditStorePage />}
-                />
-                <Route
-                  path={PATH.STORES_OPERATING_HOURS_EDIT_PATTERN}
-                  element={<EditStoreOperatingHoursPage />}
-                />
+            {/* Super Admin */}
+            <Route element={<RoleRoute roles={["super-admin"]} />}>
+              <Route path={PATH.USERS} element={<UserPage />} />
+              <Route path={PATH.USERS_CREATE} element={<CreateUserPage />} />
+              <Route
+                path={PATH.USERS_EDIT_PATTERN}
+                element={<EditUserPage />}
+              />
 
-                <Route
-                  path={PATH.MENU_CATEGORIES}
-                  element={<MenuCategoryPage />}
-                />
+              <Route path={PATH.STORES} element={<StorePage />} />
+              <Route path={PATH.STORES_CREATE} element={<CreateStorePage />} />
+              <Route
+                path={PATH.STORES_EDIT_PATTERN}
+                element={<EditStorePage />}
+              />
+              <Route
+                path={PATH.STORES_OPERATING_HOURS_EDIT_PATTERN}
+                element={<EditStoreOperatingHoursPage />}
+              />
 
-                <Route path={PATH.MENUS} element={<MenuPage />} />
-                <Route path={PATH.MENUS_CREATE} element={<CreateMenuPage />} />
-                <Route
-                  path={PATH.MENUS_EDIT_PATTERN}
-                  element={<EditMenuPage />}
-                />
-              </Route>
-              {/* End Super Admin */}
+              <Route
+                path={PATH.MENU_CATEGORIES}
+                element={<MenuCategoryPage />}
+              />
 
-              {/* Super Admin & Owner */}
-              {/* <Route
+              <Route path={PATH.MENUS} element={<MenuPage />} />
+              <Route path={PATH.MENUS_CREATE} element={<CreateMenuPage />} />
+              <Route
+                path={PATH.MENUS_EDIT_PATTERN}
+                element={<EditMenuPage />}
+              />
+            </Route>
+            {/* End Super Admin */}
+
+            {/* Super Admin & Owner */}
+            {/* <Route
                 element={<RoleRoute roles={["super-admin", "owner"]} />}
               ></Route> */}
 
-              {/* Admin */}
-              {/* <Route element={<RoleRoute roles={["admin"]} />}></Route> */}
-            </Route>
-
-            <Route path="*" element={<NotFound />} />
+            {/* Admin */}
+            {/* <Route element={<RoleRoute roles={["admin"]} />}></Route> */}
           </Route>
 
-          {/* Guest */}
-          <Route element={<GuestRoute />}>
-            <Route
-              path={PATH.LOGIN}
-              element={user ? <Navigate to="/" replace /> : <Login />}
-            />
-          </Route>
-        </Routes>
-      </Router>
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
     </>
   );
 }

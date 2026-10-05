@@ -1,18 +1,20 @@
 // import axios from "@/libs/axios";
-import api from "@/libs/axios";
+import { api } from "@/libs/axios";
+import { clearAccessToken, getAccessToken } from "@/libs/token-store";
 import type { ApiResponse } from "@/types/api";
 
-import type { Login, Register, AuthResponse, UserAuth } from "@/types/auth";
-
-// GET CSRF COOKIE
-// export const csrf = async () => {
-//   await axios.get(`${import.meta.env.VITE_API_URL}/sanctum/csrf-cookie`);
-// };
+import type {
+  LoginRequest,
+  Register,
+  LoginResponse,
+  MeResponse,
+} from "@/types/auth";
+import { refresh } from "./authRefresh";
 
 // REGISTER
 export const register = async (
   payload: Register,
-): Promise<ApiResponse<AuthResponse>> => {
+): Promise<ApiResponse<LoginResponse>> => {
   // await csrf();
 
   const response = await api.post("/register", payload);
@@ -22,25 +24,33 @@ export const register = async (
 
 // LOGIN
 export const login = async (
-  payload: Login,
-): Promise<ApiResponse<AuthResponse>> => {
+  payload: LoginRequest,
+): Promise<ApiResponse<LoginResponse>> => {
   // await csrf();
 
-  const response = await api.post("/login", payload);
+  const response = await api.post<ApiResponse<LoginResponse>>(
+    "/auth/login",
+    payload,
+  );
 
   return response.data;
 };
 
-// GET AUTH USER
-export const getUser = async (): Promise<UserAuth> => {
-  const response = await api.get("/user");
+export const getMe = async (): Promise<MeResponse> => {
+  if (!getAccessToken()) {
+    await refresh();
+  }
+
+  const response = await api.get<ApiResponse<MeResponse>>("/auth/me");
 
   return response.data.data;
 };
 
 // LOGOUT
 export const logout = async () => {
-  const response = await api.post("/logout");
-
-  return response.data;
+  try {
+    await api.post("/auth/logout");
+  } finally {
+    clearAccessToken();
+  }
 };

@@ -1,8 +1,18 @@
+import LoadingScreen from "@/components/ui/loading/LoadingScreen";
 import { Navigate, Outlet } from "react-router";
+
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function GuestRoute() {
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
 
-  return user ? <Navigate to="/" replace /> : <Outlet />;
+  if (authLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />;
 }

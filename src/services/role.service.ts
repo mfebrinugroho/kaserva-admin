@@ -1,5 +1,5 @@
 import type { ApiResponse } from "@/types/api";
-import api from "../libs/axios";
+import { api } from "../libs/axios";
 import type { Role } from "@/types/role";
 
 export const roleService = {

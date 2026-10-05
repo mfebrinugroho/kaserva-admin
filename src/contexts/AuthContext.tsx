@@ -1,15 +1,11 @@
-import { getUser } from "@/services/authApi";
-import type { UserAuth } from "@/types/auth";
-import { useQueryClient } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useState } from "react";
-import { logout as logoutApi } from "@/services/authApi";
+import type { MeResponse } from "@/types/auth";
+import { createContext, useContext } from "react";
 import type { StoreAuth } from "@/types/store";
+import { useMe } from "@/hooks/useMe";
+import { useLogoutMutation } from "@/hooks/mutations/useLogoutMutation";
 
 type AuthContextType = {
-  token: string | null;
-  setToken: React.Dispatch<React.SetStateAction<string | null>>;
-  user: UserAuth | null;
-  setUser: React.Dispatch<React.SetStateAction<UserAuth | null>>;
+  user: MeResponse | null;
   userStores: StoreAuth[] | null;
   authLoading: boolean;
   hasPermission: (permission: string) => boolean;
@@ -29,79 +25,24 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token"),
-  );
-  const [user, setUser] = useState<UserAuth | null>(null);
-  const [userStores, setUserStores] = useState<StoreAuth[] | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
-  const queryClient = useQueryClient();
+  const { data: user, isLoading: isMeLoading } = useMe();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!token) {
-        setUser(null);
-        setUserStores(null);
-        setAuthLoading(false);
-        return;
-      }
+  const userStores = user?.stores ?? [];
 
-      setAuthLoading(true);
-
-      try {
-        const user = await getUser();
-
-        setUser(user);
-        setUserStores(user.stores);
-      } catch (error) {
-        console.log(error);
-        setUser(null);
-        setUserStores(null);
-        localStorage.removeItem("token");
-        setToken(null);
-      } finally {
-        setAuthLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [token]);
-
-  const hasPermission = (permission: string): boolean => {
+  const hasPermission = (permission: string) => {
     return user?.permissions?.some((p) => p.slug === permission) ?? false;
   };
 
-  const logout = async () => {
-    setAuthLoading(true);
-    try {
-      await logoutApi();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      localStorage.removeItem("token");
-
-      setToken(null);
-
-      setUser(null);
-      setUserStores(null);
-
-      queryClient.clear();
-
-      setAuthLoading(false);
-    }
-  };
+  const logoutMutation = useLogoutMutation();
 
   return (
     <AuthContext.Provider
       value={{
-        token,
-        setToken,
-        user,
-        setUser,
+        user: user ?? null,
         userStores,
-        authLoading,
+        authLoading: isMeLoading,
         hasPermission,
-        logout,
+        logout: logoutMutation.mutateAsync,
       }}
     >
       {children}

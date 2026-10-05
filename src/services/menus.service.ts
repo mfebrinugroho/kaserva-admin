@@ -1,4 +1,4 @@
-import api from "@/libs/axios";
+import { api } from "@/libs/axios";
 import type { MenuFormOutput } from "@/schemas/menu.schema";
 import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
 import type { Menu } from "@/types/menu";

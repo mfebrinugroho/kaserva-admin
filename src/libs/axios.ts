@@ -1,34 +1,54 @@
-import axios from "axios";
+import axios, { type InternalAxiosRequestConfig } from "axios";
+import { clearAccessToken, getAccessToken } from "./token-store";
+import { refresh } from "@/services/authRefresh";
 
-const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api/v1/staff`,
-  // withCredentials: true,
-  headers: {
-    Accept: "application/json",
-    // "Content-Type": "application/json",
-  },
+export const api = axios.create({
+  baseURL: `${import.meta.env.VITE_API_URL}/api/staff`,
+  withCredentials: true,
+});
+
+export const apiRefresh = axios.create({
+  baseURL: `${import.meta.env.VITE_API_URL}/api/staff`,
+  withCredentials: true,
 });
 
 // REQUEST INTERCEPTOR
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
+api.interceptors.request.use((config) => {
+  const accessToken = getAccessToken();
 
-    // if (token) {
-    //   config.headers.Authorization =
-    //     `Bearer ${token}`;
-    // }
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
 
-    if (token) {
-      config.headers.set("Authorization", `Bearer ${token}`);
+  return config;
+});
+
+type RetryConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+};
+
+api.interceptors.response.use(
+  (response) => response,
+
+  async (error) => {
+    const originalRequest = error.config as RetryConfig;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const newAccessToken = await refresh();
+
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+        return api(originalRequest);
+      } catch (refreshError) {
+        clearAccessToken();
+
+        return Promise.reject(refreshError);
+      }
     }
 
-    return config;
-  },
-
-  (error) => {
     return Promise.reject(error);
   },
 );
-
-export default api;

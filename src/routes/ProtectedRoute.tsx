@@ -1,8 +1,17 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "@/contexts/AuthContext";
+import LoadingScreen from "@/components/ui/loading/LoadingScreen";
 
 export default function ProtectedRoute() {
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
 
-  return user ? <Outlet /> : <Navigate to="/login" replace />;
+  if (authLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 }

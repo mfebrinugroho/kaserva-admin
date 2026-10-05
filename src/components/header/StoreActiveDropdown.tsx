@@ -4,44 +4,41 @@ import { ChevronDown, Store } from "lucide-react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { useAuth } from "@/contexts/AuthContext";
-import { useMutation } from "@tanstack/react-query";
-import { userService } from "@/services/user.service";
-import { toast } from "sonner";
 
 const StoreActiveDropdown = () => {
-  const { user, setUser, userStores } = useAuth();
+  const { user, userStores } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
-  const updateActiveStoreMutation = useMutation({
-    mutationFn: userService.updateActiveStore,
-    onMutate: async (storeId) => {
-      if (!user) return;
+  // const updateActiveStoreMutation = useMutation({
+  //   mutationFn: userService.updateActiveStore,
+  //   onMutate: async (storeId) => {
+  //     if (!user) return;
 
-      const previousUser = user;
+  //     const previousUser = user;
 
-      setUser({
-        ...user,
-        store_id: storeId,
-      });
+  //     setUser({
+  //       ...user,
+  //       store_id: storeId,
+  //     });
 
-      return { previousUser };
-    },
+  //     return { previousUser };
+  //   },
 
-    onSuccess: async (response) => {
-      setUser(response.data);
+  //   onSuccess: async (response) => {
+  //     setUser(response.data);
 
-      setIsOpen(false);
+  //     setIsOpen(false);
 
-      toast.success(response.message);
-    },
-    onError: (error, _variables, context) => {
-      if (context?.previousUser) {
-        setUser(context.previousUser);
-      }
+  //     toast.success(response.message);
+  //   },
+  //   onError: (error, _variables, context) => {
+  //     if (context?.previousUser) {
+  //       setUser(context.previousUser);
+  //     }
 
-      toast.error(error.message);
-    },
-  });
+  //     toast.error(error.message);
+  //   },
+  // });
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
@@ -62,7 +59,7 @@ const StoreActiveDropdown = () => {
       return;
     }
 
-    updateActiveStoreMutation.mutate(storeId);
+    // updateActiveStoreMutation.mutate(storeId);
   };
 
   return (

@@ -6,8 +6,8 @@ const Login = () => {
   return (
     <>
       <PageMeta
-        title="OrderKuy - Login"
-        description="OrderKuy is Application POS"
+        title="Kaserva - Login"
+        description="Kaserva is Application POS"
       />
       <AuthLayout>
         <LoginForm />

@@ -1,58 +1,61 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import Label from "@/components/ui/input/Label";
-import Input from "@/components/ui/input/InputField";
-import Checkbox from "@/components/ui/input/Checkbox";
 import Button from "@/components/ui/button/Button";
 import { Eye, EyeOff } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { login } from "@/services/authApi";
-import axios from "axios";
-
-type ValidationErrors = {
-  name?: string[];
-  email?: string[];
-  password?: string[];
-};
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginFormData } from "@/schemas/login.schema";
+import Input from "@/components/ui/input/Input";
+import { useState } from "react";
+import { isAxiosError } from "axios";
+import { useLoginMutation } from "@/hooks/mutations/useLoginMutation";
+import type { ApiErrorResponse } from "@/types/api";
 
 export default function LoginForm() {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const loginMutation = useLoginMutation();
+
+  const {
+    register,
+    handleSubmit,
+    resetField,
+    setError,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<ValidationErrors>({});
-  const navigate = useNavigate();
-  const { setToken } = useAuth();
+  const isLoginLocked = loginMutation.isPending || loginMutation.isSuccess;
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const onSubmit = (data: LoginFormData) => {
+    if (isLoginLocked) return;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
+    loginMutation.mutate(data, {
+      onSuccess: () => {
+        navigate("/");
+      },
+      onError: (error) => {
+        resetField("password");
+
+        if (
+          isAxiosError<ApiErrorResponse>(error) &&
+          error.response?.status === 401
+        ) {
+          setError("root.server", {
+            type: "server",
+            message: "Email atau password salah.",
+          });
+
+          return;
+        }
+      },
     });
-  };
-
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      setLoading(true);
-      const response = await login(form);
-
-      localStorage.setItem("token", response.token);
-      setToken(response.token);
-      navigate("/");
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setErrors(error.response?.data.errors ?? {});
-      }
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -68,7 +71,15 @@ export default function LoginForm() {
             </p>
           </div>
           <div>
-            <form onSubmit={handleLogin}>
+            {errors.root?.server && (
+              <div className="mb-4 w-max-md">
+                <p className="text-sm text-error-500 dark:text-error-400">
+                  Email atau password salah. Silahkan coba lagi.
+                </p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-6">
                 <div>
                   <Label htmlFor="email">
@@ -77,16 +88,11 @@ export default function LoginForm() {
                   <Input
                     type="email"
                     placeholder="info@gmail.com"
-                    name="email"
                     id="email"
-                    value={form.email}
-                    onChange={handleChange}
+                    {...register("email")}
+                    error={!!errors.email}
+                    hint={errors.email?.message}
                   />
-                  {errors.email && (
-                    <p className="text-error-600 text-xs mt-1">
-                      {errors.email[0]}
-                    </p>
-                  )}
                 </div>
                 <div>
                   <Label htmlFor="password">
@@ -96,14 +102,14 @@ export default function LoginForm() {
                     <Input
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
-                      name="password"
                       id="password"
-                      value={form.password}
-                      onChange={handleChange}
+                      {...register("password")}
+                      error={!!errors.password}
+                      hint={errors.password?.message}
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                      className={`absolute z-30 -translate-y-1/2 cursor-pointer right-4  ${errors.password ? "top-1/3" : "top-1/2"}`}
                     >
                       {showPassword ? (
                         <Eye
@@ -119,28 +125,14 @@ export default function LoginForm() {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Checkbox checked={isChecked} onChange={setIsChecked} />
-                    <span className="block font-normal text-gray-700 text-theme-sm dark:text-gray-400">
-                      Biarkan aku tetap masuk
-                    </span>
-                  </div>
-                  <Link
-                    to="#"
-                    className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                  >
-                    Lupa Password?
-                  </Link>
-                </div>
                 <div>
                   <Button
                     className="w-full"
                     size="sm"
                     type="submit"
-                    disabled={loading}
+                    disabled={isLoginLocked}
                   >
-                    Sign in
+                    {loginMutation.isPending ? "Sedang masuk..." : "Login"}
                   </Button>
                 </div>
               </div>

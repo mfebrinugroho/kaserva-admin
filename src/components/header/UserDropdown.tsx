@@ -12,8 +12,13 @@ export default function UserDropdown() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout();
-    navigate(PATH.LOGIN);
+    try {
+      await logout();
+
+      navigate(PATH.LOGIN);
+    } catch (error) {
+      console.log("Logout gagal", error);
+    }
   };
 
   const toggleDropdown = () => {
@@ -172,7 +177,7 @@ export default function UserDropdown() {
               fill=""
             />
           </svg>
-          Sign out
+          Logout
         </button>
       </Dropdown>
     </div>

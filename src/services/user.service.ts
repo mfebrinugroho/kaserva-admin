@@ -1,8 +1,8 @@
 import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
-import api from "../libs/axios";
+import { api } from "../libs/axios";
 import type { User } from "@/types/user";
 import type { UpdateUserFormOutput } from "@/schemas/updateUser.schema";
-import type { UserAuth } from "@/types/auth";
+import type { MeResponse } from "@/types/auth";
 import type { UserFormOutput } from "@/schemas/user.schema";
 
 interface UserQueryParams {
@@ -56,8 +56,8 @@ export const userService = {
     return response.data;
   },
 
-  updateActiveStore: async (id: number): Promise<ApiResponse<UserAuth>> => {
-    const response = await api.post<ApiResponse<UserAuth>>(
+  updateActiveStore: async (id: number): Promise<ApiResponse<MeResponse>> => {
+    const response = await api.post<ApiResponse<MeResponse>>(
       `/user/active-store`,
       {
         store_id: id,

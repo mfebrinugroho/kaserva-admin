@@ -1,5 +1,5 @@
 import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
-import api from "../libs/axios";
+import { api } from "../libs/axios";
 import type { Store, StoreOperatingHour, StoreOption } from "@/types/store";
 import type { StoreFormOutput } from "@/schemas/store.schema";
 import type { UpdateStoreFormData } from "@/schemas/updateStore.schema";
