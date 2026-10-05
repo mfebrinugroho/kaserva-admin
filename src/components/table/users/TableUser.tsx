@@ -19,12 +19,14 @@ import { useUsers } from "@/hooks/queries/useUsers";
 import { useState } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 import { cn } from "@/libs/utils";
+import { useAuth } from "@/contexts/AuthContext";
 
 type Props = {
   onDelete: (user: User) => void;
 };
 
 const TableUser = ({ onDelete }: Props) => {
+  const { user: me } = useAuth();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
@@ -141,19 +143,21 @@ const TableUser = ({ onDelete }: Props) => {
                     </TableCell>
                     <TableCell>
                       <p className="text-theme-sm text-gray-700 dark:text-gray-400">
-                        <RoleBadge role={user.role.slug}>
-                          {user.role.name}
+                        <RoleBadge role={user.role?.slug}>
+                          {user.role?.name}
                         </RoleBadge>
                       </p>
                     </TableCell>
                     <TableCell>
-                      <div className="flex w-full items-center gap-2">
-                        <button
-                          className="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500"
-                          onClick={() => onDelete(user)}
-                        >
-                          <Trash2 size={18} />
-                        </button>
+                      <div className="flex w-full items-center justify-center gap-2">
+                        {me?.id !== user.id && (
+                          <button
+                            className="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500"
+                            onClick={() => onDelete(user)}
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        )}
 
                         <Link
                           to={PATH.USERS_EDIT(user.id)}

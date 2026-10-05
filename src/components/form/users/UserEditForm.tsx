@@ -41,8 +41,6 @@ const UserEditForm = ({ userId }: Props) => {
     defaultValues: {
       name: "",
       email: "",
-      password: "",
-      password_confirmation: "",
       role_id: "",
     },
     resolver: zodResolver(updateUserSchema),
@@ -55,8 +53,6 @@ const UserEditForm = ({ userId }: Props) => {
       name: user.data.name,
       email: user.data.email,
       role_id: String(user.data.role_id),
-      password: "",
-      password_confirmation: "",
     });
   }, [user, reset]);
 
@@ -114,30 +110,6 @@ const UserEditForm = ({ userId }: Props) => {
               error={!!errors.email}
               hint={errors.email?.message}
               {...register("email")}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              id="password"
-              placeholder="Password User"
-              error={!!errors.password}
-              hint={errors.password?.message}
-              {...register("password")}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="password_confirmation">Konfirmasi Password</Label>
-            <Input
-              type="password"
-              id="password_confirmation"
-              placeholder="Konfirmasi Password User"
-              error={!!errors.password_confirmation}
-              hint={errors.password_confirmation?.message}
-              {...register("password_confirmation")}
             />
           </div>
 
