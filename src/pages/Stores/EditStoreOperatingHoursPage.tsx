@@ -1,8 +1,8 @@
+import { useParams } from "react-router";
 import ComponentCard from "@/components/common/ComponentCard";
 import PageHeader from "@/components/common/PageHeader";
 import StoreOperatingHoursForm from "@/components/form/stores/StoreOperatingHoursForm";
 import { useStoreOperatingHours } from "@/hooks/queries/useStoreOperatingHours";
-import { useParams } from "react-router";
 
 const EditStoreOperatingHoursPage = () => {
   const { id } = useParams();

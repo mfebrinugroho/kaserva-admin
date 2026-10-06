@@ -9,8 +9,9 @@ const AddOwnerPage = () => {
 
       <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
         <div className="col-span-1">
-          <Label>Pilih Owner</Label>
+          <Label htmlFor="owner">Pilih Owner</Label>
           <input
+            id="owner"
             type="text"
             placeholder="Musharof"
             className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -18,10 +19,14 @@ const AddOwnerPage = () => {
         </div>
 
         <div className="col-span-1">
-          <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+          <label
+            htmlFor="last-name"
+            className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+          >
             Last Name
           </label>
           <input
+            id="last-name"
             type="text"
             placeholder="Chowdhury"
             className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -29,10 +34,14 @@ const AddOwnerPage = () => {
         </div>
 
         <div className="col-span-1">
-          <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+          <label
+            htmlFor="email-address"
+            className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+          >
             Email Address
           </label>
           <input
+            id="email-address"
             type="email"
             placeholder="randomuser@pimjo.com"
             className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -40,10 +49,14 @@ const AddOwnerPage = () => {
         </div>
 
         <div className="col-span-1">
-          <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+          <label
+            htmlFor="phone"
+            className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+          >
             Phone
           </label>
           <input
+            id="phone"
             type="text"
             placeholder="+09 363 398 46"
             className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -51,10 +64,14 @@ const AddOwnerPage = () => {
         </div>
 
         <div className="col-span-1 sm:col-span-2">
-          <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+          <label
+            htmlFor="team-manager"
+            className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+          >
             Bio
           </label>
           <input
+            id="team-manager"
             type="text"
             placeholder="Team Manager"
             className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"

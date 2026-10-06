@@ -1,4 +1,4 @@
-import { ShoppingBag, Wallet, Star, UtensilsCrossed } from "lucide-react";
+import { ShoppingBag, Star, UtensilsCrossed, Wallet } from "lucide-react";
 
 import StatCard from "@/components/dashboard/StatCard";
 

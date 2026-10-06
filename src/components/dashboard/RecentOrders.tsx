@@ -1,4 +1,4 @@
-import { ArrowRight, Clock3, CheckCircle2, ChefHat } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChefHat, Clock3 } from "lucide-react";
 
 const orders = [
   {
@@ -67,7 +67,10 @@ export default function RecentOrders() {
           <p className="text-sm text-slate-500">Pesanan yang baru masuk</p>
         </div>
 
-        <button className="flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700">
+        <button
+          type="button"
+          className="flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700"
+        >
           Lihat Semua
           <ArrowRight size={18} />
         </button>

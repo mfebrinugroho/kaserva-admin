@@ -1,5 +1,5 @@
-import LoadingScreen from "@/components/ui/loading/LoadingScreen";
 import { Navigate, Outlet } from "react-router";
+import LoadingScreen from "@/components/ui/loading/LoadingScreen";
 
 import { useAuth } from "@/contexts/AuthContext";
 

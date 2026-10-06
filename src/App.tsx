@@ -1,15 +1,16 @@
+import { lazy } from "react";
 import { Navigate, Route, Routes } from "react-router";
+import { Toaster } from "sonner";
 import { ScrollToTop } from "@/components/common/ScrollToTop";
-import { useAuth } from "@/contexts/AuthContext";
 import LoadingScreen from "@/components/ui/loading/LoadingScreen";
+import { useAuth } from "@/contexts/AuthContext";
 import GuestRoute from "@/routes/GuestRoute";
 import ProtectedRoute from "@/routes/ProtectedRoute";
-import RoleRoute from "@/routes/RoleRoute";
 import { PATH } from "@/routes/path";
-import { Toaster } from "sonner";
-import { lazy } from "react";
+import RoleRoute from "@/routes/RoleRoute";
 import MenuCategoryPage from "./pages/MenuCategories/MenuCategoryPage";
 import EditMenuPage from "./pages/Menus/EditMenuPage";
+
 const EditStoreOperatingHoursPage = lazy(
   () => import("@//pages/Stores/EditStoreOperatingHoursPage"),
 );

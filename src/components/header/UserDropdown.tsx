@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
-import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { useNavigate } from "react-router";
+import { Dropdown } from "@/components/ui/dropdown/Dropdown";
+import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
+import LoadingScreen from "@/components/ui/loading/LoadingScreen";
 import { useAuth } from "@/contexts/AuthContext";
 import { PATH } from "@/routes/path";
-import LoadingScreen from "@/components/ui/loading/LoadingScreen";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,6 +36,7 @@ export default function UserDropdown() {
   return (
     <div className="relative">
       <button
+        type="button"
         onClick={toggleDropdown}
         className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
       >
@@ -47,6 +48,7 @@ export default function UserDropdown() {
           {user?.name}
         </span>
         <svg
+          aria-hidden="true"
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
           }`}
@@ -89,6 +91,7 @@ export default function UserDropdown() {
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
+                aria-hidden="true"
                 className="fill-gray-500 group-hover:fill-gray-700 dark:fill-gray-400 dark:group-hover:fill-gray-300"
                 width="24"
                 height="24"
@@ -114,6 +117,7 @@ export default function UserDropdown() {
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
+                aria-hidden="true"
                 className="fill-gray-500 group-hover:fill-gray-700 dark:fill-gray-400 dark:group-hover:fill-gray-300"
                 width="24"
                 height="24"
@@ -139,6 +143,7 @@ export default function UserDropdown() {
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
+                aria-hidden="true"
                 className="fill-gray-500 group-hover:fill-gray-700 dark:fill-gray-400 dark:group-hover:fill-gray-300"
                 width="24"
                 height="24"
@@ -163,6 +168,7 @@ export default function UserDropdown() {
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >
           <svg
+            aria-hidden="true"
             className="fill-gray-500 group-hover:fill-gray-700 dark:group-hover:fill-gray-300"
             width="24"
             height="24"

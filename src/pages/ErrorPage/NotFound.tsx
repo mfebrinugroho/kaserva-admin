@@ -1,7 +1,7 @@
-import GridShape from "@/components/common/GridShape";
-import { useNavigate } from "react-router";
-import PageMeta from "@/components/common/PageMeta";
 import { FileQuestion } from "lucide-react";
+import { useNavigate } from "react-router";
+import GridShape from "@/components/common/GridShape";
+import PageMeta from "@/components/common/PageMeta";
 
 export default function NotFound() {
   const navigate = useNavigate();
@@ -40,6 +40,7 @@ export default function NotFound() {
           </p>
 
           <button
+            type="button"
             onClick={handleBack}
             className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-3.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200"
           >

@@ -4,6 +4,7 @@ import { useLocation } from "react-router";
 export function ScrollToTop() {
   const { pathname } = useLocation();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: pathname intentionally triggers this effect on route changes.
   useEffect(() => {
     window.scrollTo({
       top: 0,

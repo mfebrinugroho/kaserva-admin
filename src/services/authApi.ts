@@ -5,9 +5,9 @@ import type { ApiResponse } from "@/types/api";
 
 import type {
   LoginRequest,
-  Register,
   LoginResponse,
   MeResponse,
+  Register,
 } from "@/types/auth";
 import { refresh } from "./authRefresh";
 

@@ -1,5 +1,5 @@
-import { menuService } from "@/services/menus.service";
 import { useQuery } from "@tanstack/react-query";
+import { menuService } from "@/services/menus.service";
 
 export const useMenu = (id: number) => {
   return useQuery({

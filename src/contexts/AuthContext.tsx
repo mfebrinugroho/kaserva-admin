@@ -1,8 +1,8 @@
-import type { MeResponse } from "@/types/auth";
 import { createContext, useContext } from "react";
-import type { StoreAuth } from "@/types/store";
-import { useMe } from "@/hooks/useMe";
 import { useLogoutMutation } from "@/hooks/mutations/useLogoutMutation";
+import { useMe } from "@/hooks/useMe";
+import type { MeResponse } from "@/types/auth";
+import type { StoreAuth } from "@/types/store";
 
 type AuthContextType = {
   user: MeResponse | null;

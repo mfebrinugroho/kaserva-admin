@@ -1,16 +1,16 @@
-import Label from "@/components/ui/input/Label";
-import Select from "@/components/ui/input/Select";
-import {
-  addOwnerSchema,
-  type AddOwnerFormInput,
-  type AddOwnerFormOutput,
-} from "@/schemas/addOwner.schema";
-import { storeService } from "@/services/store.service";
-import { handleFormError } from "@/utils/handleFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import Label from "@/components/ui/input/Label";
+import Select from "@/components/ui/input/Select";
+import {
+  type AddOwnerFormInput,
+  type AddOwnerFormOutput,
+  addOwnerSchema,
+} from "@/schemas/addOwner.schema";
+import { storeService } from "@/services/store.service";
+import { handleFormError } from "@/utils/handleFormError";
 
 interface Props {
   onClose: () => void;

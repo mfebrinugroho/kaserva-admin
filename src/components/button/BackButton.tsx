@@ -1,5 +1,5 @@
-import { cn } from "@/libs/utils";
 import { Link } from "react-router";
+import { cn } from "@/libs/utils";
 
 interface Props {
   url: string;

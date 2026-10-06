@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { toast } from "sonner";
 import ComponentCard from "@/components/common/ComponentCard";
 import PageHeader from "@/components/common/PageHeader";
 import TableUser from "@/components/table/users/TableUser";
@@ -5,8 +7,6 @@ import ModalDelete from "@/components/ui/modal/ModalDelete";
 import { useDeleteUser } from "@/hooks/mutations/useDeleteUser";
 import { PATH } from "@/routes/path";
 import type { User } from "@/types/user";
-import { useState } from "react";
-import { toast } from "sonner";
 
 const UserPage = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);

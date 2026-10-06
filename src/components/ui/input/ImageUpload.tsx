@@ -1,5 +1,5 @@
-import { useRef } from "react";
 import { ImagePlus, Trash2 } from "lucide-react";
+import { useRef } from "react";
 
 interface ImageUploadProps {
   preview: string | null;
@@ -31,7 +31,8 @@ export default function ImageUpload({ preview, onChange }: ImageUploadProps) {
       />
 
       {!preview ? (
-        <div
+        <button
+          type="button"
           onClick={() => inputRef.current?.click()}
           className="flex h-52 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 hover:border-blue-500 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-blue-500 dark:hover:bg-gray-800"
         >
@@ -42,10 +43,14 @@ export default function ImageUpload({ preview, onChange }: ImageUploadProps) {
           </p>
 
           <p className="text-sm text-gray-500">JPG, PNG, WEBP</p>
-        </div>
+        </button>
       ) : (
         <div className="relative">
-          <img src={preview} className="h-52 w-full rounded-xl object-cover" />
+          <img
+            src={preview}
+            className="h-52 w-full rounded-xl object-cover"
+            alt="Preview gambar"
+          />
 
           <button
             type="button"

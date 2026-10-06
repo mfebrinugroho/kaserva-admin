@@ -1,3 +1,6 @@
+import { ChevronsUpDown, Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import Switch from "@/components/ui/input/Switch";
 import {
   Table,
@@ -16,9 +19,6 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { cn } from "@/libs/utils";
 import type { MenuCategory } from "@/types/menuCategory";
 import { getRowNumber } from "@/utils/rowNumber";
-import { ChevronsUpDown, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 
 type Props = {
   onDelete: (menuCategory: MenuCategory) => void;
@@ -170,6 +170,7 @@ const TableMenuCategories = ({ onDelete, onEdit }: Props) => {
                   <TableCell>
                     <div className="flex w-full items-center gap-2">
                       <button
+                        type="button"
                         className="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500"
                         onClick={() => onDelete(category)}
                       >
@@ -177,6 +178,7 @@ const TableMenuCategories = ({ onDelete, onEdit }: Props) => {
                       </button>
 
                       <button
+                        type="button"
                         className="text-gray-500 hover:text-warning-500 dark:text-gray-400 dark:hover:text-warning-500"
                         onClick={() => onEdit(category)}
                       >

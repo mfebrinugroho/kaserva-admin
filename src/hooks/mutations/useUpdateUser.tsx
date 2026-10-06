@@ -1,6 +1,6 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UpdateUserFormOutput } from "@/schemas/updateUser.schema";
 import { userService } from "@/services/user.service";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   userId: number;

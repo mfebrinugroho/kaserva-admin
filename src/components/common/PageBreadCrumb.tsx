@@ -22,6 +22,7 @@ const PageBreadcrumb = ({ pageTitle }: BreadcrumbProps) => {
             >
               Home
               <svg
+                aria-hidden="true"
                 className="stroke-current"
                 width="17"
                 height="16"

@@ -1,9 +1,9 @@
-import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
-import { api } from "../libs/axios";
-import type { User } from "@/types/user";
 import type { UpdateUserFormOutput } from "@/schemas/updateUser.schema";
-import type { MeResponse } from "@/types/auth";
 import type { UserFormOutput } from "@/schemas/user.schema";
+import type { ApiPaginatedResponse, ApiResponse } from "@/types/api";
+import type { MeResponse } from "@/types/auth";
+import type { User } from "@/types/user";
+import { api } from "../libs/axios";
 
 interface UserQueryParams {
   page?: number;

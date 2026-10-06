@@ -1,10 +1,10 @@
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 import BackButton from "@/components/button/BackButton";
 import { useUpdateStoreOperatingHours } from "@/hooks/mutations/useUpdateStoreOperatingHours";
 import { PATH } from "@/routes/path";
 import type { StoreOperatingHour } from "@/types/store";
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { toast } from "sonner";
 
 interface Props {
   storeId: number;
@@ -120,11 +120,15 @@ const StoreOperatingHoursForm = ({ storeId, operatingHours }: Props) => {
             {item.is_open ? (
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="flex-1">
-                  <label className="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400">
+                  <label
+                    htmlFor="open-time"
+                    className="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                  >
                     Jam Buka
                   </label>
 
                   <input
+                    id="open-time"
                     type="time"
                     value={item.open_time ?? ""}
                     onChange={(e) =>
@@ -141,11 +145,15 @@ const StoreOperatingHoursForm = ({ storeId, operatingHours }: Props) => {
                 <span className="mt-5 hidden text-gray-400 sm:block">→</span>
 
                 <div className="flex-1">
-                  <label className="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400">
+                  <label
+                    htmlFor="close-time"
+                    className="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                  >
                     Jam Tutup
                   </label>
 
                   <input
+                    id="close-time"
                     type="time"
                     value={item.close_time ?? ""}
                     onChange={(e) =>

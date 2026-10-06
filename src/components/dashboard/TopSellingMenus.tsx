@@ -1,4 +1,4 @@
-import { TrendingUp, Flame, Star } from "lucide-react";
+import { Flame, Star, TrendingUp } from "lucide-react";
 
 const menus = [
   {

@@ -1,7 +1,7 @@
+import { useParams } from "react-router";
 import ComponentCard from "@/components/common/ComponentCard";
 import PageHeader from "@/components/common/PageHeader";
 import MenuEditForm from "@/components/form/menus/MenuEditForm";
-import { useParams } from "react-router";
 
 const EditMenuPage = () => {
   const { id } = useParams();

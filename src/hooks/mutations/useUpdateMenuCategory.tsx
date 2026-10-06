@@ -1,6 +1,6 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MenuCategoryFormOutput } from "@/schemas/menuCategory.schema";
 import { menuCategoriesService } from "@/services/menuCategories.service";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   categoryId: number;

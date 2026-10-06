@@ -1,5 +1,5 @@
-import { getMe } from "@/services/authApi";
 import { useQuery } from "@tanstack/react-query";
+import { getMe } from "@/services/authApi";
 
 export function useMe(options?: { enabled?: boolean }) {
   return useQuery({

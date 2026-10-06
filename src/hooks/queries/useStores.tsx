@@ -1,5 +1,5 @@
-import { storeService } from "@/services/store.service";
 import { useQuery } from "@tanstack/react-query";
+import { storeService } from "@/services/store.service";
 
 interface StoreQueryParams {
   page: number;

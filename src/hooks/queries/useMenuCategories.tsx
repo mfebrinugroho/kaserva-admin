@@ -1,5 +1,5 @@
-import { menuCategoriesService } from "@/services/menuCategories.service";
 import { useQuery } from "@tanstack/react-query";
+import { menuCategoriesService } from "@/services/menuCategories.service";
 
 interface MenuCategoryQueryParams {
   page: number;

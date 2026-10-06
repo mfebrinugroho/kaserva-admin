@@ -1,5 +1,5 @@
-import type { Role } from "@/types/role";
 import type { Permission } from "@/types/permission";
+import type { Role } from "@/types/role";
 import type { StoreAuth } from "./store";
 
 export interface Me {

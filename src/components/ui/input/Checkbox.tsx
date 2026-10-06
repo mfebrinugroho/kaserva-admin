@@ -35,6 +35,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         />
         {checked && (
           <svg
+            aria-hidden="true"
             className="absolute transform -translate-x-1/2 -translate-y-1/2 pointer-events-none top-1/2 left-1/2"
             xmlns="http://www.w3.org/2000/svg"
             width="14"
@@ -53,6 +54,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         )}
         {disabled && (
           <svg
+            aria-hidden="true"
             className="absolute transform -translate-x-1/2 -translate-y-1/2 pointer-events-none top-1/2 left-1/2"
             xmlns="http://www.w3.org/2000/svg"
             width="14"

@@ -1,9 +1,9 @@
-import { useState } from "react";
-import Button from "../ui/button/Button";
 import { ChevronDown, Store } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import Button from "../ui/button/Button";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { useAuth } from "@/contexts/AuthContext";
 
 const StoreActiveDropdown = () => {
   const { user, userStores } = useAuth();
@@ -92,10 +92,12 @@ const StoreActiveDropdown = () => {
             Pilih Resto/Toko
           </h5>
           <button
+            type="button"
             onClick={toggleDropdown}
             className="text-gray-500 transition dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
           >
             <svg
+              aria-hidden="true"
               className="fill-current"
               width="24"
               height="24"

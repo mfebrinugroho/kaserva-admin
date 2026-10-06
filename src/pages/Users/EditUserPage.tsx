@@ -1,7 +1,7 @@
+import { useParams } from "react-router";
 import ComponentCard from "@/components/common/ComponentCard";
 import PageHeader from "@/components/common/PageHeader";
 import UserEditForm from "@/components/form/users/UserEditForm";
-import { useParams } from "react-router";
 
 const EditUserPage = () => {
   const { id } = useParams();

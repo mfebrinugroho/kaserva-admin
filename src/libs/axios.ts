@@ -1,6 +1,6 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
-import { clearAccessToken, getAccessToken } from "./token-store";
 import { refresh } from "@/services/authRefresh";
+import { clearAccessToken, getAccessToken } from "./token-store";
 
 export const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/staff`,

@@ -1,6 +1,6 @@
 import ComponentCard from "@/components/common/ComponentCard";
-import UserCreateForm from "@/components/form/users/UserCreateForm";
 import PageHeader from "@/components/common/PageHeader";
+import UserCreateForm from "@/components/form/users/UserCreateForm";
 
 const CreateUserPage = () => {
   return (

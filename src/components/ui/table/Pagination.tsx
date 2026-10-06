@@ -27,6 +27,7 @@ export default function Pagination({
         <div className="flex items-center justify-center gap-0.5 pb-4 xl:justify-normal xl:pt-0">
           {/* PREV */}
           <button
+            type="button"
             onClick={() => onPageChange(page - 1)}
             disabled={page === 1}
             className="mr-2.5 flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-gray-700 shadow-theme-xs hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
@@ -35,17 +36,18 @@ export default function Pagination({
           </button>
 
           {/* PAGES */}
-          {pages.map((p, i) =>
+          {pages.map((p) =>
             p === "..." ? (
               <span
-                key={i}
+                key={`ellipsis-${p}`}
                 className="flex h-10 w-10 items-center justify-center text-gray-400"
               >
                 ...
               </span>
             ) : (
               <button
-                key={i}
+                type="button"
+                key={p}
                 onClick={() => onPageChange(p)}
                 className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition
                   ${
@@ -61,6 +63,7 @@ export default function Pagination({
 
           {/* NEXT */}
           <button
+            type="button"
             onClick={() => onPageChange(page + 1)}
             disabled={page === lastPage}
             className="ml-2.5 flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-gray-700 shadow-theme-xs hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"

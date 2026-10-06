@@ -1,7 +1,7 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { menuService } from "@/services/menus.service";
 import type { ApiPaginatedResponse } from "@/types/api";
 import type { Menu } from "@/types/menu";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface MenuQueryParams {
   page: number;

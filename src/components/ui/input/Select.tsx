@@ -1,5 +1,5 @@
 import { ChevronDown } from "lucide-react";
-import { type SelectHTMLAttributes } from "react";
+import type { SelectHTMLAttributes } from "react";
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   placeholder?: string;

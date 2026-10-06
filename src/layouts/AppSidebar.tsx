@@ -1,6 +1,3 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router";
-import { useSidebar } from "@/contexts/SidebarContext";
 import {
   ChartBarStacked,
   ChevronDownIcon,
@@ -10,6 +7,9 @@ import {
   Store,
   Users,
 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router";
+import { useSidebar } from "@/contexts/SidebarContext";
 import { PATH } from "@/routes/path";
 
 type NavItem = {
@@ -77,6 +77,7 @@ const AppSidebar: React.FC = () => {
     [location.pathname],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: location intentionally triggers this effect on route changes.
   useEffect(() => {
     let submenuMatched = false;
     ["main", "others"].forEach((menuType) => {
@@ -132,6 +133,7 @@ const AppSidebar: React.FC = () => {
         <li key={nav.name}>
           {nav.subItems ? (
             <button
+              type="button"
               onClick={() => handleSubmenuToggle(index, menuType)}
               className={`menu-item group ${
                 openSubmenu?.type === menuType && openSubmenu?.index === index

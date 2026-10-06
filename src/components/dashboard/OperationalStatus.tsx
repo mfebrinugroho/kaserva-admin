@@ -1,11 +1,11 @@
-import { useAuth } from "@/contexts/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Store, ShoppingBag } from "lucide-react";
-import Switch from "../ui/input/Switch";
-import { storeService } from "@/services/store.service";
-import type { Store as StoreType } from "@/types/store";
-import type { ApiResponse } from "@/types/api";
+import { ShoppingBag, Store } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { storeService } from "@/services/store.service";
+import type { ApiResponse } from "@/types/api";
+import type { Store as StoreType } from "@/types/store";
+import Switch from "../ui/input/Switch";
 
 export default function OperationalStatus() {
   const { user } = useAuth();

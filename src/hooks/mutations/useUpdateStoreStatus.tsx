@@ -1,7 +1,7 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { storeService } from "@/services/store.service";
 import type { ApiPaginatedResponse } from "@/types/api";
 import type { Store } from "@/types/store";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface StoreQueryParams {
   page: number;

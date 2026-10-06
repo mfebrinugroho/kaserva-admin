@@ -1,14 +1,14 @@
-import { Link, useNavigate } from "react-router";
-import Label from "@/components/ui/input/Label";
-import Button from "@/components/ui/button/Button";
-import { Eye, EyeOff } from "lucide-react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, type LoginFormData } from "@/schemas/login.schema";
-import Input from "@/components/ui/input/Input";
-import { useState } from "react";
 import { isAxiosError } from "axios";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
+import Button from "@/components/ui/button/Button";
+import Input from "@/components/ui/input/Input";
+import Label from "@/components/ui/input/Label";
 import { useLoginMutation } from "@/hooks/mutations/useLoginMutation";
+import { type LoginFormData, loginSchema } from "@/schemas/login.schema";
 import type { ApiErrorResponse } from "@/types/api";
 
 export default function LoginForm() {
@@ -107,7 +107,8 @@ export default function LoginForm() {
                       error={!!errors.password}
                       hint={errors.password?.message}
                     />
-                    <span
+                    <button
+                      type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className={`absolute z-30 -translate-y-1/2 cursor-pointer right-4  ${errors.password ? "top-1/3" : "top-1/2"}`}
                     >
@@ -122,7 +123,7 @@ export default function LoginForm() {
                           className="text-gray-500 dark:text-gray-400"
                         />
                       )}
-                    </span>
+                    </button>
                   </div>
                 </div>
                 <div>

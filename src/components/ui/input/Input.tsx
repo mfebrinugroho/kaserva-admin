@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes } from "react";
+import type { InputHTMLAttributes } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: "text" | "number" | "email" | "password" | "date" | "time" | string;

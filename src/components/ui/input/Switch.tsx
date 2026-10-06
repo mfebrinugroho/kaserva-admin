@@ -51,7 +51,8 @@ const Switch = ({
         };
 
   return (
-    <label
+    <button
+      type="button"
       className={`flex cursor-pointer select-none items-center gap-3 text-sm font-medium ${
         disabled ? "text-gray-400" : "text-gray-700 dark:text-gray-400"
       }`}
@@ -70,7 +71,7 @@ const Switch = ({
         ></div>
       </div>
       {checked ? activeLabel : inactiveLabel}
-    </label>
+    </button>
   );
 };
 

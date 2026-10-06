@@ -1,5 +1,5 @@
-import { menuService } from "@/services/menus.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { menuService } from "@/services/menus.service";
 
 export const useDeleteMenu = () => {
   const queryClient = useQueryClient();

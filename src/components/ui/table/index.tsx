@@ -1,5 +1,5 @@
-import { cn } from "@/libs/utils";
 import type { ReactNode } from "react";
+import { cn } from "@/libs/utils";
 
 // Props for Table
 interface TableProps {
@@ -104,4 +104,4 @@ const TableCell: React.FC<TableCellProps> = ({
   );
 };
 
-export { Table, TableHeader, TableBody, TableRow, TableCell };
+export { Table, TableBody, TableCell, TableHeader, TableRow };

@@ -1,5 +1,5 @@
-import { cn } from "@/libs/utils";
 import { Link } from "react-router";
+import { cn } from "@/libs/utils";
 
 interface ComponentCardProps {
   title: string;
@@ -51,6 +51,7 @@ const ComponentCard = ({
               className="bg-brand-500 shadow-theme-xs hover:bg-brand-600 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white transition"
             >
               <svg
+                aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
                 height="20"
@@ -73,10 +74,12 @@ const ComponentCard = ({
         {addModal && (
           <div className="flex gap-3">
             <button
+              type="button"
               onClick={onClick}
               className="bg-brand-500 shadow-theme-xs hover:bg-brand-600 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white transition"
             >
               <svg
+                aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
                 height="20"
