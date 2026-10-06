@@ -4,41 +4,88 @@ import { useAuth } from "@/contexts/AuthContext";
 import Button from "../ui/button/Button";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import { userService } from "@/services/user.service";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { MeResponse } from "@/types/auth";
+import { toast } from "sonner";
 
 const StoreActiveDropdown = () => {
   const { user, userStores } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
 
-  // const updateActiveStoreMutation = useMutation({
-  //   mutationFn: userService.updateActiveStore,
-  //   onMutate: async (storeId) => {
-  //     if (!user) return;
+  console.log(userStores);
 
-  //     const previousUser = user;
+  const updateActiveStoreMutation = useMutation({
+    mutationFn: userService.updateActiveStore,
+    onMutate: async (storeId) => {
+      // if (!user) return;
 
-  //     setUser({
-  //       ...user,
-  //       store_id: storeId,
-  //     });
+      // const previousUser = user;
 
-  //     return { previousUser };
-  //   },
+      // setUser({
+      //   ...user,
+      //   store_id: storeId,
+      // });
 
-  //   onSuccess: async (response) => {
-  //     setUser(response.data);
+      // return { previousUser };
 
-  //     setIsOpen(false);
+      ////
 
-  //     toast.success(response.message);
-  //   },
-  //   onError: (error, _variables, context) => {
-  //     if (context?.previousUser) {
-  //       setUser(context.previousUser);
-  //     }
+      // Batalkan request / refetch useMe yang sedang berjalan
+      await queryClient.cancelQueries({
+        queryKey: ["auth", "me"],
+      });
 
-  //     toast.error(error.message);
-  //   },
-  // });
+      // Simpan data sebelumnya untuk rollback
+      const previousUser = queryClient.getQueryData<MeResponse>(["auth", "me"]);
+
+      // Optimistic update
+      if (previousUser) {
+        queryClient.setQueryData<MeResponse>(["auth", "me"], {
+          ...previousUser,
+          store_id: storeId,
+        });
+      }
+
+      return {
+        previousUser,
+      };
+    },
+
+    onSuccess: async (response) => {
+      // setUser(response.data);
+
+      // setIsOpen(false);
+
+      // toast.success(response.message);
+
+      ////
+
+      // Response dari backend menjadi source of truth
+      queryClient.setQueryData<MeResponse>(["auth", "me"], response.data);
+
+      setIsOpen(false);
+
+      toast.success(response.message);
+    },
+    onError: (error, _variables, context) => {
+      // if (context?.previousUser) {
+      //   setUser(context.previousUser);
+      // }
+
+      // toast.error(error.message);
+
+      ////
+
+      // Rollback kalau request gagal
+      if (context?.previousUser) {
+        queryClient.setQueryData(["auth", "me"], context.previousUser);
+      }
+
+      toast.error(error.message);
+    },
+  });
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
@@ -53,13 +100,18 @@ const StoreActiveDropdown = () => {
   };
 
   const handleActiveStore = (storeId: number) => {
-    setIsOpen(false);
+    // setIsOpen(false);
+    // if (user?.store_id === storeId) {
+    //   return;
+    // }
+    // updateActiveStoreMutation.mutate(storeId);
 
     if (user?.store_id === storeId) {
+      setIsOpen(false);
       return;
     }
 
-    // updateActiveStoreMutation.mutate(storeId);
+    updateActiveStoreMutation.mutate(storeId);
   };
 
   return (
